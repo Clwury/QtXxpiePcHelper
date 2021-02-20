@@ -1,0 +1,2 @@
+# QtXxpiePcHelper
+Project Qt reconstruction
