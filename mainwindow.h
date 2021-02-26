@@ -1,11 +1,21 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
+#include <iostream>
 #include <QMainWindow>
+#include <QCheckBox>
+#include <QRadioButton>
+#include <QPlainTextEdit>
+#include <QPushButton>
+#include <QDebug>
+#include <QStack>
+#include <QQueue>
+#include <QMap>
 
-QT_BEGIN_NAMESPACE
-namespace Ui { class MainWindow; }
-QT_END_NAMESPACE
+//QT_BEGIN_NAMESPACE
+//namespace Ui { class MainWindow; }
+//QT_END_NAMESPACE
+using namespace std;
 
 class MainWindow : public QMainWindow
 {
@@ -15,7 +25,33 @@ public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
 
+private slots:
+//    void on_checkBox_clicked(bool checked);
+
+//    void on_checkBox_2_clicked(bool checked);
+
+//    void on_checkBox_3_clicked(bool checked);
+    void on_checkBoxUnder(bool checked);
+
+    void on_checkBoxItalic(bool checked);
+
+    void on_checkBoxBold(bool checked);
+
+    void setTextFontColor();
+
 private:
-    Ui::MainWindow *ui;
+//    Ui::MainWindow *ui;
+    QWidget *widget;
+    QCheckBox *checkBoxUnder;
+    QCheckBox *checkBoxItalic;
+    QCheckBox *checkBoxBold;
+    QRadioButton *radioBtnRed;
+    QRadioButton *radioBtnBlue;
+    QRadioButton *radioBtnWhite;
+    QPlainTextEdit *plainTextEdit;
+    QPushButton *pushBtnSignIn;
+    QPushButton *pushBtnCancel;
+    void iniUI();
+    void iniSignalSlots();
 };
 #endif // MAINWINDOW_H
