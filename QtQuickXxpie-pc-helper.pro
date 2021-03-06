@@ -1,4 +1,6 @@
-QT += quick
+QT += \
+   quick \
+   widgets
 
 CONFIG += \
        c++11 \
@@ -11,6 +13,8 @@ CONFIG += \
 SOURCES += \
         backend.cpp \
         main.cpp \
+        piechart.cpp \
+        mainwindow.cpp \
         randomnumbergenerator.cpp
 
 RESOURCES += qml.qrc
@@ -19,15 +23,16 @@ TRANSLATIONS += \
     QtQuickXxpie-pc-helper_zh_CN.ts
 
 # Additional import path used to resolve QML modules in Qt Creator's code model
-QML_IMPORT_PATH =
+#QML_IMPORT_PATH =
 #QML_IMPORT_NAME = io.qt.examples.backend
 #QML_IMPORT_VERSION = 1
-QML_IMPORT_NAME = io.qt.examples.randomnumbergenerator
+#QML_IMPORT_NAME = io.qt.examples.randomnumbergenerator
+#QML_IMPORT_VERSION = 1
+QML_IMPORT_NAME = Charts
 QML_IMPORT_VERSION = 1
+
 QML_IMPORT_PATH = $$PWD
-INCLUDEPATH += \
-            io/qt/examples/backend \
-            io/qt/examples/randomnumbergenerator
+#INCLUDEPATH += io/qt/examples/randomnumbergenerator
 
 # Additional import path used to resolve QML modules just for Qt Quick Designer
 QML_DESIGNER_IMPORT_PATH =
@@ -39,4 +44,6 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 
 HEADERS += \
     backend.h \
+    piechart.h \
+    mainwindow.h \
     randomnumbergenerator.h

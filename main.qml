@@ -2,7 +2,8 @@ import QtQuick 2.12
 //import QtQuick.Window 2.12
 import QtQuick.Controls 2.12
 //import io.qt.examples.backend 1.0
-import io.qt.examples.randomnumbergenerator 1.0
+//import io.qt.examples.randomnumbergenerator 1.0
+import Charts 1.0
 
 //Window {
 //    width: 640
@@ -101,28 +102,56 @@ import io.qt.examples.randomnumbergenerator 1.0
 //        anchors.verticalCenter: parent.verticalCenter
 //    }
 //}
-ApplicationWindow {
-    id: root
-    width: 300
-    height: 480
-    visible: true
+//ApplicationWindow {
+//    id: root
+//    width: 300
+//    height: 480
+//    visible: true
 
-//    BackEnd {
-//        id: backend
+////    BackEnd {
+////        id: backend
+////    }
+
+////    TextField {
+////        text: backend.userName
+////        placeholderText: qsTr("UserName")
+////        anchors.centerIn: parent
+
+////        onEditingFinished: backend.userName = text
+////    }
+
+//    Rectangle {
+//        RandomNumberGenerator on width { maxValue: 300 }
+
+//        height: 100
+//        color: "red"
 //    }
-
-//    TextField {
-//        text: backend.userName
-//        placeholderText: qsTr("UserName")
-//        anchors.centerIn: parent
-
-//        onEditingFinished: backend.userName = text
-//    }
+//}
+//Window {
+//    visible: true
+//    color: 'red'
+Item {
+    width: 400
+    height: 300
 
     Rectangle {
-        RandomNumberGenerator on width { maxValue: 300 }
 
-        height: 100
-        color: "red"
+        width: parent.width
+        height: parent.height
+        color: '#d1d1d1'
+
+        PieChart {
+            id: aPieChart
+            anchors.centerIn: parent
+            width: 100; height: 100
+            name: "A simple pie chart"
+            color: "red"
+        }
+
+        Text {
+            anchors { bottom: parent.bottom; horizontalCenter: parent.horizontalCenter; bottomMargin: 20 }
+            text: aPieChart.name
+        }
     }
 }
+//}

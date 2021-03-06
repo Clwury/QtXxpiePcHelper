@@ -9,24 +9,14 @@ class RandomNumberGenerator : public QObject, public QQmlPropertyValueSource
 {
     Q_OBJECT
     Q_INTERFACES(QQmlPropertyValueSource)
-    Q_PROPERTY(int maxValue READ maxValue WRITE setMaxValue NOTIFY maxValueChanged);
+    Q_PROPERTY(int maxValue READ maxValue WRITE setMaxValue NOTIFY maxValueChanged)
     QML_ELEMENT
 public:
-    RandomNumberGenerator(QObject *parent)
-        : QObject(parent), m_maxValue(100)
-    {
-        QObject::connect(&m_timer, SIGNAL(timeout()), SLOT(updateProperty()));
-        m_timer.start(500);
-    }
+    RandomNumberGenerator(QObject *parent);
 
-    int maxValue() const
-    {
-        return m_maxValue;
-    }
-    void setMaxValue(int maxValue)
-    {
-        m_maxValue = maxValue;
-    }
+    int maxValue() const;
+
+    void setMaxValue(int maxValue);
 
     virtual void setTarget(const QQmlProperty &prop) { m_targetProperty = prop; }
 
