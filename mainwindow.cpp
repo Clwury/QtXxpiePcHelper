@@ -10,16 +10,34 @@ MainWindow::MainWindow(QWidget *parent)
 //    iniSignalSlots();
 //    setWindowTitle("你好,世界");
 
+#ifdef Q_OS_MACOS
     this->setUnifiedTitleAndToolBarOnMac(true);
+#else
+    this->setWindowFlags(Qt::FramelessWindowHint | windowFlags());
+#endif
 //    WId wid = this->winId();
-    this->resize(400, 300);
-    QWindow *window = this->windowHandle();
-    qDebug() << window->size();
-    m_quickView = new QQuickView(window);
+    this->setFixedSize(400, 300);
+
+//    this->setAttribute(Qt::WA_TranslucentBackground);
+//    QWindow *window = this->windowHandle();
+//    qDebug() << window;
+//    this->setAttribute(Qt::WA_TranslucentBackground, true);
+//    this->setWindowOpacity(0.3);
+    m_point = this->pos();
+    qDebug() << "窗口起始位置pos" << m_point;
+    m_quickView = new QQuickView();
+    m_qWidget = QWidget::createWindowContainer(m_quickView, this);
+    m_qWidget->resize(400, 300);
     m_quickView->setResizeMode(QQuickView::SizeRootObjectToView);
+    m_quickView->setColor(QColor(Qt::transparent));
+    m_quickView->rootContext()->setContextProperty("mainWindow", this);
     qDebug() << m_quickView->initialSize();
     m_quickView->setSource(QUrl(QStringLiteral("qrc:/main.qml")));
-    m_quickView->show();
+//    m_quickView->show();
+//    m_quickWidget = new QQuickWidget();
+//    m_quickWidget->setResizeMode(QQuickWidget::SizeRootObjectToView);
+//    m_quickWidget->setSource(QUrl(QStringLiteral("qrc:/main.qml")));
+//    m_quickWidget->rootContext()->setContextProperty("mainWindow", this);
 
 }
 
@@ -27,7 +45,61 @@ MainWindow::~MainWindow()
 {
 //    delete ui;
     delete m_quickView;
+    delete m_qWidget;
+//    delete m_quickWidget;
 }
+
+QPoint MainWindow::point()
+{
+    return m_point;
+}
+
+void MainWindow::setPoint(const QPoint &point)
+{
+    if (m_point == point)
+    {
+        return;
+    }
+    m_point += point;
+    this->move(m_point);
+}
+
+QString MainWindow::userName()
+{
+    return m_userName;
+}
+
+void MainWindow::setUserName(const QString &userName)
+{
+    m_userName = userName;
+    qDebug() << m_userName;
+}
+
+//void MainWindow::mousePressEvent(QMouseEvent *event)
+//{
+//    qDebug() << "press";
+//    if (event->button() == Qt::LeftButton)
+//    {
+//        m_pressed = true;
+//        m_point = event->pos();
+//        qDebug() << m_point;
+//    }
+//}
+
+//void MainWindow::mouseMoveEvent(QMouseEvent *event)
+//{
+//    if (m_pressed)
+//    {
+//        move(event->pos() - m_point + this->pos());
+//    }
+//}
+
+//void MainWindow::mouseReleaseEvent(QMouseEvent *event)
+//{
+//    Q_UNUSED(event);
+//    m_pressed = false;
+//}
+
 
 //void MainWindow::on_checkBoxUnder(bool checked)
 //{

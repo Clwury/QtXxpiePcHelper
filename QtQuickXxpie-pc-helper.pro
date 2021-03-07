@@ -1,6 +1,9 @@
 QT += \
+   gui \
+   widgets \
+   qml \
    quick \
-   widgets
+   quickwidgets
 
 CONFIG += \
        c++11 \
@@ -28,8 +31,11 @@ TRANSLATIONS += \
 #QML_IMPORT_VERSION = 1
 #QML_IMPORT_NAME = io.qt.examples.randomnumbergenerator
 #QML_IMPORT_VERSION = 1
+#QML_IMPORT_NAME = MainWindow
+#QML_IMPORT_VERSION = 1
 QML_IMPORT_NAME = Charts
 QML_IMPORT_VERSION = 1
+
 
 QML_IMPORT_PATH = $$PWD
 #INCLUDEPATH += io/qt/examples/randomnumbergenerator
