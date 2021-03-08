@@ -2,5 +2,6 @@
     <qresource prefix="/">
         <file>main.qml</file>
         <file>MessageLabel.qml</file>
+        <file>images/ic_login_logo--imgs.png</file>
     </qresource>
 </RCC>

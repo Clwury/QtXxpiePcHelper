@@ -1,6 +1,7 @@
 import QtQuick 2.12
 //import QtQuick.Window 2.12
 import QtQuick.Controls 2.12
+import QtQuick.Layouts 1.12
 //import QtQuick.Controls.Material 2.12
 //import io.qt.examples.backend 1.0
 //import io.qt.examples.randomnumbergenerator 1.0
@@ -190,10 +191,48 @@ Item {
                 }
             }
 
-            Rectangle {
+            Image {
+                id: logo
+                source: "images/ic_login_logo--imgs.png"
+                width: parent.width * 2 / 3
+                fillMode: Image.PreserveAspectFit
+                anchors.top: parent.top
+                anchors.horizontalCenter: parent.horizontalCenter
+            }
 
-                width: parent.width
-                height: parent.height / 4
+            ColumnLayout
+                TextField {
+                    id: telNumInput
+                    placeholderText: qsTr("请输入")
+                    width: parent.width * 2 / 3
+
+
+                    anchors.top: logo.bottom
+                    anchors.horizontalCenter: parent.horizontalCenter
+                }
+
+                TextField {
+                    id: passwordInput
+                    placeholderText: qsTr("请输入密码")
+                    width: parent.width * 2 / 3
+
+                    anchors.top: telNumInput.bottom
+                    anchors.horizontalCenter: parent.horizontalCenter
+                }
+
+                Button {
+                    id: loginBtn
+                    text: qsTr("login")
+                    width: parent.width / 3
+
+                    anchors.top: passwordInput.bottom
+                    anchors.horizontalCenter: parent.horizontalCenter
+                }
+
+//            Rectangle {
+
+//                width: parent.width
+//                height: parent.height / 4
 //                color: 'red'
 
 //                TextField {
@@ -204,93 +243,99 @@ Item {
 //                    anchors.margins: 2
 //                    font.pointSize: 10
 //                    placeholderText: qsTr("请输入手机号")
-//                    o
 //                    selectByMouse: true
 
 //                    onEditingFinished: mainWindow.setUserName(text)
 //                }
 
-                TextField {
-                    id: root
+//                TextField {
 
-                    property color checkedColor: "#D5DBDB"
+//                    id: textField
+//                    text: qsTr("text Field")
 
-                    signal doubleClicked(var/*MouseEvent*/ event)
+//                }
 
-                    placeholderText: qsTr("请输入内容")
-                    font.family: "Arial"
-                    font.pixelSize: 15
-                    font.weight: Font.Thin
-                    antialiasing: true
+//                TextField {
+//                    id: root
 
-                    background: Rectangle {
-                        implicitWidth: 213
-                        implicitHeight: 42
-                        radius: 8
-                        color: root.enabled ? "transparent" : "#F4F6F6"
-                        border.color: root.enabled ? root.checkedColor : "#D5DBDB"
-                        border.width: 2
-                        opacity: root.enabled ? 1 : 0.7
+//                    property color checkedColor: "#D5DBDB"
 
-                        layer.enabled: root.hovered
+//                    signal doubleClicked(var/*MouseEvent*/ event)
+
+//                    placeholderText: qsTr("请输入内容")
+//                    font.family: "Arial"
+//                    font.pixelSize: 15
+//                    font.weight: Font.Thin
+//                    antialiasing: true
+
+//                    background: Rectangle {
+//                        implicitWidth: 213
+//                        implicitHeight: 42
+//                        radius: 8
+//                        color: root.enabled ? "transparent" : "#F4F6F6"
+//                        border.color: root.enabled ? root.checkedColor : "#D5DBDB"
+//                        border.width: 2
+//                        opacity: root.enabled ? 1 : 0.7
+
+//                        layer.enabled: root.hovered
 //                        layer.effect: DropShadow {
 //                            id: dropShadow
 //                            transparentBorder: true
 //                            color: root.checkedColor
 //                            samples: 10 /*20*/
 //                        }
-                    }
+//                    }
 
-                    cursorDelegate: Rectangle {
-                        width: 1
-                        height: parent.height * 0.4
-                        color: root.checkedColor
-                        visible: root.focus
+//                    cursorDelegate: Rectangle {
+//                        width: 1
+//                        height: parent.height * 0.4
+//                        color: root.checkedColor
+//                        visible: root.focus
 
-                        Timer {
-                            interval: 600
-                            repeat: true
-                            running: root.focus
-                            onRunningChanged: parent.visible = running
-                            onTriggered: parent.visible = !parent.visible
-                        }
-                    }
+//                        Timer {
+//                            interval: 600
+//                            repeat: true
+//                            running: root.focus
+//                            onRunningChanged: parent.visible = running
+//                            onTriggered: parent.visible = !parent.visible
+//                        }
+//                    }
 
-                    onDoubleClicked: selectAll()
+//                    onDoubleClicked: selectAll()
 
-                    /* note: This signal was introduced in QtQuick.Controls 2.1 (Qt 5.8). */
-                    onPressed: {
-                        _private.mouseEvent = event
-                        _private.isCheckDoubleClickedEvent++
+//                    /* note: This signal was introduced in QtQuick.Controls 2.1 (Qt 5.8). */
+//                    onPressed: {
+//                        _private.mouseEvent = event
+//                        _private.isCheckDoubleClickedEvent++
 
-                        if (! _checkDoubleClickedEventTimer.running)
-                            _checkDoubleClickedEventTimer.restart()
-                    }
+//                        if (! _checkDoubleClickedEventTimer.running)
+//                            _checkDoubleClickedEventTimer.restart()
+//                    }
 
-                    /* Private */
-                    Item {
-                        id: _private
-                        property int isCheckDoubleClickedEvent: 0
-                        property var/*MouseEvent*/ mouseEvent
+//                    /* Private */
+//                    Item {
+//                        id: _private
+//                        property int isCheckDoubleClickedEvent: 0
+//                        property var/*MouseEvent*/ mouseEvent
 
-                        Timer {
-                            id: _checkDoubleClickedEventTimer
-                            running: false
-                            repeat: false
-                            interval: 180
-                            onTriggered: {
-                                if (_private.isCheckDoubleClickedEvent >= 2) {
-                                    /* Double Clicked Event */
-                                    root.doubleClicked(_private.mouseEvent)
-                                }
+//                        Timer {
+//                            id: _checkDoubleClickedEventTimer
+//                            running: false
+//                            repeat: false
+//                            interval: 180
+//                            onTriggered: {
+//                                if (_private.isCheckDoubleClickedEvent >= 2) {
+//                                    /* Double Clicked Event */
+//                                    root.doubleClicked(_private.mouseEvent)
+//                                }
 
-                                stop()
-                                _private.isCheckDoubleClickedEvent = 0
-                            }
-                        }
-                    }
-                }
-            }
+//                                stop()
+//                                _private.isCheckDoubleClickedEvent = 0
+//                            }
+//                        }
+//                    }
+//                }
+//            }
 
         }
 
