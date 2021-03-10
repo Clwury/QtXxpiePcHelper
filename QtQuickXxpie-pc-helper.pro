@@ -3,7 +3,8 @@ QT += \
    widgets \
    qml \
    quick \
-   quickwidgets
+   quickwidgets \
+   network
 
 CONFIG += \
        c++11 \
@@ -16,6 +17,7 @@ CONFIG += \
 SOURCES += \
         backend.cpp \
         main.cpp \
+        networkrequest.cpp \
         piechart.cpp \
         mainwindow.cpp \
         randomnumbergenerator.cpp
@@ -50,6 +52,8 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 
 HEADERS += \
     backend.h \
+    config.h \
+    networkrequest.h \
     piechart.h \
     mainwindow.h \
     randomnumbergenerator.h

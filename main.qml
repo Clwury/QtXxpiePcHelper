@@ -177,9 +177,11 @@ Item {
 //        }
 
         Rectangle {
+
+            id: rootArea
             width: parent.width * 2 / 3
             height: parent.height * 2 / 3
-            color: "#ffffff"
+            color: "#d1d1d1"
             anchors.centerIn: parent
 
             MouseArea {
@@ -200,35 +202,59 @@ Item {
                 anchors.horizontalCenter: parent.horizontalCenter
             }
 
-            ColumnLayout
+            ColumnLayout {
+
+                id: columnLayout
+                anchors.top: logo.bottom
+                anchors.topMargin: 15
+                anchors.horizontalCenter: parent.horizontalCenter
+
+//                Component.onCompleted: {
+//                    console.log(logo)
+//                    console.log(parent)
+//                }
+
+//                Rectangle {
+//                    width: parent.width
+//                    height: parent.height
+//                    Layout.preferredWidth: rootArea.width
+//                    Layout.alignment: Qt.AlignCen`ter
+//                    color: "#1A01CC"
+//                }
+
                 TextField {
                     id: telNumInput
                     placeholderText: qsTr("请输入")
-                    width: parent.width * 2 / 3
+//                    text: mainWindow.userName()
+//                    width: parent.width
+                    Layout.preferredWidth: logo.width
 
-
-                    anchors.top: logo.bottom
-                    anchors.horizontalCenter: parent.horizontalCenter
+//                    onEditingFinished: mainWindow.setUserName(text)
                 }
 
                 TextField {
                     id: passwordInput
                     placeholderText: qsTr("请输入密码")
-                    width: parent.width * 2 / 3
+//                    width: parent.width
+                    Layout.preferredWidth: logo.width
 
-                    anchors.top: telNumInput.bottom
-                    anchors.horizontalCenter: parent.horizontalCenter
+
+//                    anchors.top: telNumInput.bottom
+//                    anchors.horizontalCenter: parent.horizontalCenter
                 }
 
                 Button {
                     id: loginBtn
                     text: qsTr("login")
-                    width: parent.width / 3
+//                    width: parent.width / 2
+                    Layout.alignment: Qt.AlignHCenter
 
-                    anchors.top: passwordInput.bottom
-                    anchors.horizontalCenter: parent.horizontalCenter
+                    onClicked: mainWindow.login(telNumInput.text, passwordInput.text)
+//                    anchors.top: passwordInput.bottom
+//                    anchors.horizontalCenter: parent.horizontalCenter
                 }
 
+            }
 //            Rectangle {
 
 //                width: parent.width

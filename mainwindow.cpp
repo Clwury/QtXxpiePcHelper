@@ -23,7 +23,7 @@ MainWindow::MainWindow(QWidget *parent)
 //    qDebug() << window;
 //    this->setAttribute(Qt::WA_TranslucentBackground, true);
 //    this->setWindowOpacity(0.3);
-    m_point = this->pos();
+//    m_point = this->pos();
     qDebug() << "窗口起始位置pos" << m_point;
     m_quickView = new QQuickView();
     m_qWidget = QWidget::createWindowContainer(m_quickView, this);
@@ -31,7 +31,7 @@ MainWindow::MainWindow(QWidget *parent)
     m_quickView->setResizeMode(QQuickView::SizeRootObjectToView);
     m_quickView->setColor(QColor(Qt::transparent));
     m_quickView->rootContext()->setContextProperty("mainWindow", this);
-    qDebug() << m_quickView->initialSize();
+//    qDebug() << m_quickView->initialSize();
     m_quickView->setSource(QUrl(QStringLiteral("qrc:/main.qml")));
 //    m_quickView->show();
 //    m_quickWidget = new QQuickWidget();
@@ -73,6 +73,11 @@ void MainWindow::setUserName(const QString &userName)
 {
     m_userName = userName;
     qDebug() << m_userName;
+}
+
+void MainWindow::login(const QString &userName, const QString &password)
+{
+    qDebug() << userName << password;
 }
 
 //void MainWindow::mousePressEvent(QMouseEvent *event)

@@ -1,7 +1,7 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
-//#include <iostream>
+#include "networkrequest.h"
 #include <QMainWindow>
 #include <QQuickWidget>
 #include <QQuickView>
@@ -10,7 +10,7 @@
 //#include <QRadioButton>
 //#include <QPlainTextEdit>
 //#include <QPushButton>
-#include <QDebug>
+//#include <QDebug>
 #include <QWidget>
 #include <QPoint>
 #include <QQmlContext>
@@ -38,6 +38,7 @@ public:
     Q_INVOKABLE void setPoint(const QPoint &point);
     Q_INVOKABLE QString userName();
     Q_INVOKABLE void setUserName(const QString &userName);
+    Q_INVOKABLE void login(const QString &userName, const QString &password);
 //    void mousePressEvent(QMouseEvent *event);
 //    void mouseMoveEvent(QMouseEvent *event);
 //    void mouseReleaseEvent(QMouseEvent *event);
