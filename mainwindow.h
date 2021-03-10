@@ -2,6 +2,7 @@
 #define MAINWINDOW_H
 
 #include "networkrequest.h"
+#include "config.h"
 #include <QMainWindow>
 #include <QQuickWidget>
 #include <QQuickView>
@@ -82,6 +83,7 @@ private:
 //    bool m_pressed;
     QPoint m_point;
     QString m_userName;
+    networkrequest *m_networkRequest;
 
 };
 #endif // MAINWINDOW_H

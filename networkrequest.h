@@ -1,26 +1,30 @@
 #ifndef NETWORKREQUEST_H
 #define NETWORKREQUEST_H
 
-#include "config.h"
-#include <QDebug>
-#include <QString>
+//#include <QDebug>
+//#include <QString>
+#include <config.h>
 #include <QNetworkAccessManager>
 #include <QNetworkRequest>
 #include <QNetworkReply>
+#include <QUrlQuery>
+#include <QJsonObject>
+
+extern const QUuid UUID;
+extern const QString MACHINE_ID;
 
 class networkrequest : public QObject
 {
     Q_OBJECT
 public:
     explicit networkrequest(QObject *parent = nullptr);
-    void get(const QString &url);
-//    void post(const )
+    void get(const QString &url, const QJsonObject &params);
+    void post(const QString &url, const QJsonObject &params);
 
 signals:
 
 private:
     QNetworkAccessManager *networkAccessManager;
-    QNetworkRequest networkRequest;
     QNetworkReply *networkReply;
 };
 

@@ -16,6 +16,7 @@ CONFIG += \
 
 SOURCES += \
         backend.cpp \
+        config.cpp \
         main.cpp \
         networkrequest.cpp \
         piechart.cpp \

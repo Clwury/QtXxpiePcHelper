@@ -1,6 +1,10 @@
 #ifndef CONFIG_H
 #define CONFIG_H
 
+#include <QUuid>
+#include <QString>
+#include <QDebug>
+
 #define PRODUCTION 1
 #define USERAGENT "QTGUIAPPLICATION"
 #define VERSION "4.3.5"
@@ -12,5 +16,8 @@
     #define BASE "https://int2.xxpie.com/api"
     #define BASEDOMAIN "https://www-test.xxpie.com"
 #endif
+
+extern const QUuid UUID;
+extern const QString MACHINE_ID;
 
 #endif // CONFIG_H

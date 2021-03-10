@@ -33,6 +33,7 @@ MainWindow::MainWindow(QWidget *parent)
     m_quickView->rootContext()->setContextProperty("mainWindow", this);
 //    qDebug() << m_quickView->initialSize();
     m_quickView->setSource(QUrl(QStringLiteral("qrc:/main.qml")));
+    m_networkRequest = new networkrequest;
 //    m_quickView->show();
 //    m_quickWidget = new QQuickWidget();
 //    m_quickWidget->setResizeMode(QQuickWidget::SizeRootObjectToView);
