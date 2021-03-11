@@ -9,7 +9,7 @@ networkrequest::networkrequest(QObject *parent) : QObject(parent)
     //    networkAccessManager
 }
 
-void networkrequest::get(const QString &url, const QJsonObject &params)
+QJsonObject networkrequest::get(const QString &url, const QJsonObject &params)
 {
     QString baseUrl = BASE + url;
     qDebug() << baseUrl;
@@ -40,11 +40,97 @@ void networkrequest::get(const QString &url, const QJsonObject &params)
 
     QByteArray byteArray = networkReply->readAll();
     qDebug() << byteArray;
-    return;
+    // 解析为Json
+    QJsonParseError jsonPareError;
+    QJsonDocument jsonDocument = QJsonDocument::fromJson(byteArray, &jsonPareError);
+    if (jsonPareError.error != QJsonParseError::NoError)
+    {
+        qDebug() << "response Json 解析失败";
+        return QJsonObject{};
+    }
+    if (jsonDocument.isObject())
+    {
+        QJsonObject responseObject = jsonDocument.object();
+        // 遍历response
+        qDebug() << "<<<<<";
+        QJsonObject::const_iterator i = responseObject.constBegin();
+        QJsonObject::const_iterator e = responseObject.constEnd();
+        while (i != e) {
+            qDebug() << i.key() << ":" << i.value();
+            i++;
+        }
+        qDebug() << ">>>>>";
+        return responseObject;
+    }
 }
 
-void networkrequest::post(const QString &url, const QJsonObject &params)
+QJsonObject networkrequest::post(const QString &url, QJsonObject &params)
 {
+    QString baseUrl = BASE + url;
+    qDebug() << baseUrl;
+    QUrl _url(baseUrl);
+//    QUrlQuery query;
+//    // 遍历params
+//    QJsonObject::const_iterator i = params.constBegin();
+//    QJsonObject::const_iterator e = params.constEnd();
+//    while (i != e) {
+//        qDebug() << "key" << i.key();
+//        qDebug() << "value" << i.value();
+//        query.addQueryItem(i.key(), i.value().toString());
+//        i++;
+//    }
+//    // 添加必要参数
+//    query.addQueryItem("platform", PLATFORM);
+//    query.addQueryItem("machine_id", MACHINE_ID);
 
+//    _url.setQuery(query);
+    if (!params.contains("platform"))
+    {
+        params.insert("platform", PLATFORM);
+    }
+    if (!params.contains("machine_id"))
+    {
+        params.insert("machine_id", MACHINE_ID);
+    }
+
+    QJsonDocument requestDocumet;
+    requestDocumet.setObject(params);
+    QByteArray requestByte = requestDocumet.toJson(QJsonDocument::Compact);
+
+    QNetworkRequest networkRequest;
+    networkRequest.setHeader(QNetworkRequest::ContentTypeHeader, "application/json");
+    networkRequest.setUrl(_url);
+    networkReply = networkAccessManager->post(networkRequest, requestByte);
+
+    // 开启事件循环
+    QEventLoop eventLoop;
+    connect(networkAccessManager, &QNetworkAccessManager::finished, &eventLoop, &QEventLoop::quit);
+    eventLoop.exec();
+
+    QByteArray byteArray = networkReply->readAll();
+    qDebug() << byteArray;
+    // 解析为Json
+    QJsonParseError jsonPareError;
+    QJsonDocument responseDocument = QJsonDocument::fromJson(byteArray, &jsonPareError);
+    if (jsonPareError.error != QJsonParseError::NoError)
+    {
+        qDebug() << "response Json 解析失败";
+        return QJsonObject{};
+    }
+    if (responseDocument.isObject())
+    {
+        QJsonObject reponseObject = responseDocument.object();
+        // 遍历response
+        qDebug() << "<<<<<";
+        QJsonObject::const_iterator i = reponseObject.constBegin();
+        QJsonObject::const_iterator e = reponseObject.constEnd();
+        while (i != e) {
+            qDebug() << i.key() << ":" << i.value();
+            i++;
+        }
+        qDebug() << ">>>>>";
+        return reponseObject;
+    }
+    return QJsonObject{};
 }
 

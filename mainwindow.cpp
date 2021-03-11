@@ -83,7 +83,20 @@ void MainWindow::login(const QString &userName, const QString &password)
     {
         {"username", userName}
     };
-    m_networkRequest->get("/sm/validateElseMachineIsAdmin", params);
+    QJsonObject response;
+    response = m_networkRequest->get("/sm/validateElseMachineIsAdmin", params);
+    if (response.contains("code") && !response.take("code").toInt())
+    {
+        QString md5(const QString &str);
+        QJsonObject params
+        {
+            {"username", userName},
+            {"platform", PLATFORM},
+            {"machine_id", MACHINE_ID},
+            {"password", md5(password)}
+        };
+        response = m_networkRequest->post("/photographer/mine/signInByPassword", params);
+    }
 }
 
 //void MainWindow::mousePressEvent(QMouseEvent *event)

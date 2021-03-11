@@ -225,6 +225,7 @@ Item {
                 TextField {
                     id: telNumInput
                     placeholderText: qsTr("请输入")
+                    text: "18390216081"
 //                    text: mainWindow.userName()
 //                    width: parent.width
                     Layout.preferredWidth: logo.width
@@ -235,6 +236,7 @@ Item {
                 TextField {
                     id: passwordInput
                     placeholderText: qsTr("请输入密码")
+                    text: "123456"
 //                    width: parent.width
                     Layout.preferredWidth: logo.width
 

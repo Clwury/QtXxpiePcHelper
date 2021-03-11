@@ -9,6 +9,8 @@
 #include <QNetworkReply>
 #include <QUrlQuery>
 #include <QJsonObject>
+#include <QJsonDocument>
+#include <QJsonParseError>
 #include <QEventLoop>
 
 extern const QUuid UUID;
@@ -19,8 +21,8 @@ class networkrequest : public QObject
     Q_OBJECT
 public:
     explicit networkrequest(QObject *parent = nullptr);
-    void get(const QString &url, const QJsonObject &params);
-    void post(const QString &url, const QJsonObject &params);
+    QJsonObject get(const QString &url, const QJsonObject &params);
+    QJsonObject post(const QString &url, QJsonObject &params);
 
 signals:
 

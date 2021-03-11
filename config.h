@@ -4,6 +4,7 @@
 #include <QUuid>
 #include <QString>
 #include <QDebug>
+#include <QCryptographicHash>
 
 #define PRODUCTION 1
 #define USERAGENT "QTGUIAPPLICATION"
@@ -21,5 +22,7 @@
 
 extern const QUuid UUID;
 extern const QString MACHINE_ID;
+
+extern QString md5(const QString &str);
 
 #endif // CONFIG_H
