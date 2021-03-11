@@ -25,7 +25,7 @@ MainWindow::MainWindow(QWidget *parent)
 //    this->setWindowOpacity(0.3);
 //    m_point = this->pos();
     qDebug() << "窗口起始位置pos" << m_point;
-    m_quickView = new QQuickView();
+    m_quickView = new QQuickView;
     m_qWidget = QWidget::createWindowContainer(m_quickView, this);
     m_qWidget->resize(400, 300);
     m_quickView->setResizeMode(QQuickView::SizeRootObjectToView);
@@ -79,6 +79,11 @@ void MainWindow::setUserName(const QString &userName)
 void MainWindow::login(const QString &userName, const QString &password)
 {
     qDebug() << userName << password;
+    QJsonObject params
+    {
+        {"username", userName}
+    };
+    m_networkRequest->get("/sm/validateElseMachineIsAdmin", params);
 }
 
 //void MainWindow::mousePressEvent(QMouseEvent *event)

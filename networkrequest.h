@@ -9,6 +9,7 @@
 #include <QNetworkReply>
 #include <QUrlQuery>
 #include <QJsonObject>
+#include <QEventLoop>
 
 extern const QUuid UUID;
 extern const QString MACHINE_ID;

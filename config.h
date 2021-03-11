@@ -7,7 +7,9 @@
 
 #define PRODUCTION 1
 #define USERAGENT "QTGUIAPPLICATION"
+#define PLATFORM "PC_HELPER"
 #define VERSION "4.3.5"
+#define TIMEOUT 30000
 
 #if PRODUCTION
     #define BASE "https://int.xxpie.com/api"
