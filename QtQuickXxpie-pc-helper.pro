@@ -58,3 +58,14 @@ HEADERS += \
     piechart.h \
     mainwindow.h \
     randomnumbergenerator.h
+
+DISTFILES +=
+
+#INCLUDEPATH += $$PWD/libcurl/include
+#LIBS += -L$$PWD/libcurl/lib/ -llibcurl
+
+LIBS += -L$$PWD/ssl -llibssl-1_1
+LIBS += -L$$PWD/ssl -llibcrypto-1_1
+
+INCLUDEPATH += $$PWD/qiniu/include
+LIBS += -L$$PWD/qiniu/lib -lqiniu

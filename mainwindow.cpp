@@ -14,9 +14,10 @@ MainWindow::MainWindow(QWidget *parent)
     this->setUnifiedTitleAndToolBarOnMac(true);
 #else
     this->setWindowFlags(Qt::FramelessWindowHint | windowFlags());
+//    this->setWindowFlags(Qt::Window);
 #endif
 //    WId wid = this->winId();
-    this->setFixedSize(400, 300);
+    this->resize(400, 300);
 
 //    this->setAttribute(Qt::WA_TranslucentBackground);
 //    QWindow *window = this->windowHandle();
@@ -24,16 +25,27 @@ MainWindow::MainWindow(QWidget *parent)
 //    this->setAttribute(Qt::WA_TranslucentBackground, true);
 //    this->setWindowOpacity(0.3);
 //    m_point = this->pos();
+
+    // 设置窗口初始位置
+    QScreen *screen = this->screen();
+    qDebug() << screen->size();
+    this->move((screen->size().width() - this->width()) / 2, (screen->size().height() - this->height()) / 2);
+    m_point = this->pos();
     qDebug() << "窗口起始位置pos" << m_point;
+
     m_quickView = new QQuickView;
-    m_qWidget = QWidget::createWindowContainer(m_quickView, this);
+    m_qWidget = this->createWindowContainer(m_quickView, this);
     m_qWidget->resize(400, 300);
+
     m_quickView->setResizeMode(QQuickView::SizeRootObjectToView);
+    qDebug() << "view size" << m_quickView->size();
     m_quickView->setColor(QColor(Qt::transparent));
     m_quickView->rootContext()->setContextProperty("mainWindow", this);
 //    qDebug() << m_quickView->initialSize();
     m_quickView->setSource(QUrl(QStringLiteral("qrc:/main.qml")));
     m_networkRequest = new networkrequest;
+
+    connect(m_quickView->engine(), &QQmlEngine::quit, this, &MainWindow::appExit);
 //    m_quickView->show();
 //    m_quickWidget = new QQuickWidget();
 //    m_quickWidget->setResizeMode(QQuickWidget::SizeRootObjectToView);
@@ -47,7 +59,15 @@ MainWindow::~MainWindow()
 //    delete ui;
     delete m_quickView;
     delete m_qWidget;
-//    delete m_quickWidget;
+    //    delete m_quickWidget;
+}
+
+void MainWindow::resizeWindow()
+{
+    this->setWindowFlags(Qt::Window);
+    this->resize(1200, 900);
+    m_qWidget->resize(1200, 900);
+    this->show();
 }
 
 QPoint MainWindow::point()
@@ -57,10 +77,10 @@ QPoint MainWindow::point()
 
 void MainWindow::setPoint(const QPoint &point)
 {
-    if (m_point == point)
-    {
-        return;
-    }
+//    if (m_point == point)
+//    {
+//        return;
+//    }
     m_point += point;
     this->move(m_point);
 }
@@ -85,8 +105,9 @@ void MainWindow::login(const QString &userName, const QString &password)
     };
     QJsonObject response;
     response = m_networkRequest->get("/sm/validateElseMachineIsAdmin", params);
-    if (response.contains("code") && !response.take("code").toInt())
+    if (response.contains("code") && !response.value("code").toInt())
     {
+        qDebug() << "after take" << response;
         QString md5(const QString &str);
         QJsonObject params
         {
@@ -96,6 +117,20 @@ void MainWindow::login(const QString &userName, const QString &password)
             {"password", md5(password)}
         };
         response = m_networkRequest->post("/photographer/mine/signInByPassword", params);
+
+        // 登录成功
+        if (response.contains("token"))
+        {
+            qDebug() << response.value("token") << "登录成功";
+            resizeWindow();
+            QQuickItem* item = m_quickView->rootObject();
+            QString returnedValue;
+//            QMetaObject::invokeMethod(object, "toMainPage", Q_RETURN_ARG(QString, returnedValue), Q_ARG(QVariant, response));
+            QObject *model = item->findChild<QObject *>("loginBtn");
+            qDebug() << model;
+            QMetaObject::invokeMethod(model, "toMainPage");
+            qDebug() << "调用qml成功" << returnedValue;
+        }
     }
 }
 

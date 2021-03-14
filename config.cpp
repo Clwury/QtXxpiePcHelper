@@ -1,7 +1,7 @@
 #include <config.h>
 
-const QUuid UUID = QUuid::createUuid();
-const QString MACHINE_ID = UUID.toString();
+const QUuid UID = QUuid::createUuid();
+const QString MACHINE_ID = UID.toString();
 
 
 QString md5(const QString &str)

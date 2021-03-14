@@ -38,6 +38,13 @@ QJsonObject networkrequest::get(const QString &url, const QJsonObject &params)
     connect(networkAccessManager, &QNetworkAccessManager::finished, &eventLoop, &QEventLoop::quit);
     eventLoop.exec();
 
+    // response状态码
+    QVariant responseStatusCode = networkReply->attribute(QNetworkRequest::HttpStatusCodeAttribute);
+    if (responseStatusCode.isValid())
+    {
+        qDebug() << "响应状态: " << responseStatusCode.toInt();
+    }
+
     QByteArray byteArray = networkReply->readAll();
     qDebug() << byteArray;
     // 解析为Json
@@ -62,6 +69,7 @@ QJsonObject networkrequest::get(const QString &url, const QJsonObject &params)
         qDebug() << ">>>>>";
         return responseObject;
     }
+    return QJsonObject{};
 }
 
 QJsonObject networkrequest::post(const QString &url, QJsonObject &params)

@@ -1,15 +1,13 @@
 #include "mainwindow.h"
 
 #include <QApplication>
-#include <QScreen>
+#include <QObject>
 
 int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
-    QScreen *screen = a.primaryScreen();
-    qDebug() << screen->size();
     MainWindow w;
-    w.move((screen->size().width() - w.width()) / 2, (screen->size().height() - w.height()) / 2);
     w.show();
+    QObject::connect(&w, &MainWindow::appExit, &a, &QApplication::quit);
     return a.exec();
 }

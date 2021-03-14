@@ -13,7 +13,7 @@
 #include <QJsonParseError>
 #include <QEventLoop>
 
-extern const QUuid UUID;
+extern const QUuid UID;
 extern const QString MACHINE_ID;
 
 class networkrequest : public QObject

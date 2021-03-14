@@ -3,9 +3,13 @@
 
 #include "networkrequest.h"
 #include "config.h"
+#include "libcurl/include/curl.h"
+#include <QScreen>
 #include <QMainWindow>
-#include <QQuickWidget>
+//#include <QQuickWidget>
+#include <QQmlEngine>
 #include <QQuickView>
+#include <QQuickItem>
 #include <QWindow>
 //#include <QCheckBox>
 //#include <QRadioButton>
@@ -13,8 +17,10 @@
 //#include <QPushButton>
 //#include <QDebug>
 #include <QWidget>
+#include <QGridLayout>
 #include <QPoint>
 #include <QQmlContext>
+//#include <QMetaObject>
 //#include <QStack>
 //#include <QQueue>
 //#include <QMap>
@@ -34,6 +40,7 @@ class MainWindow : public QMainWindow
 public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
+    void resizeWindow();
 
     Q_INVOKABLE QPoint point();
     Q_INVOKABLE void setPoint(const QPoint &point);
@@ -43,6 +50,9 @@ public:
 //    void mousePressEvent(QMouseEvent *event);
 //    void mouseMoveEvent(QMouseEvent *event);
 //    void mouseReleaseEvent(QMouseEvent *event);
+
+signals:
+    void appExit();
 
 private slots:
 //    void on_checkBox_clicked(bool checked);

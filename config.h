@@ -20,7 +20,7 @@
     #define BASEDOMAIN "https://www-test.xxpie.com"
 #endif
 
-extern const QUuid UUID;
+extern const QUuid UID;
 extern const QString MACHINE_ID;
 
 extern QString md5(const QString &str);

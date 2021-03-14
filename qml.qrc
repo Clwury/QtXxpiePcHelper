@@ -1,7 +1,11 @@
 <RCC>
     <qresource prefix="/">
-        <file>main.qml</file>
+        <file>Login.qml</file>
         <file>MessageLabel.qml</file>
         <file>images/ic_login_logo--imgs.png</file>
+        <file>Home.qml</file>
+        <file>main.qml</file>
+        <file>images/close.svg</file>
+        <file>images/hover-close.svg</file>
     </qresource>
 </RCC>
