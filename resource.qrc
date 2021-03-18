@@ -1,0 +1,7 @@
+<RCC>
+    <qresource prefix="/">
+        <file>images/close.svg</file>
+        <file>images/hover-close.svg</file>
+        <file>images/ic_login_logo--imgs.png</file>
+    </qresource>
+</RCC>
