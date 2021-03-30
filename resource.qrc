@@ -4,4 +4,7 @@
         <file>images/hover-close.svg</file>
         <file>images/ic_login_logo--imgs.png</file>
     </qresource>
+    <qresource prefix="/qss">
+        <file>qss/login.qss</file>
+    </qresource>
 </RCC>

@@ -1,0 +1,22 @@
+QMainWindow {
+    background-color: #ffffff;
+}
+
+/*QVBoxLayout {
+    width: 200px;
+}*/
+
+/*QLineEdit {
+    width: 100px;
+    height: 50px;
+}*/
+
+QPushButton {
+    border: 2px solid #d1d1d1;
+    border-radius: 10px;
+    background: #fdd7d7;
+}
+
+QPushButton:pressed {
+    background: #fa4545;
+}
