@@ -33,8 +33,16 @@ FORMS += \
 RESOURCES += \
     resource.qrc
 
-INCLUDEPATH += $$PWD/qiniu/mac/include
-LIBS += -L$$PWD/qiniu/mac/lib -lqiniu
+unix {
+    INCLUDEPATH += $$PWD/qiniu/mac/include
+    LIBS += -L$$PWD/qiniu/mac/lib -lqiniu
+}
+
+win32 {
+    INCLUDEPATH += $$PWD/qiniu/win/include
+    LIBS += -L$$PWD/qiniu/win/lib -lqiniu
+}
+
 
 DISTFILES += \
     qss/login.qss
