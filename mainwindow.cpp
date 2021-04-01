@@ -106,6 +106,8 @@ void MainWindow::accountLogin()
         {
             qDebug() << response.value("token") << "登录成功";
             this->close();
+            // 打开主页面
+
         }
     }
 }
