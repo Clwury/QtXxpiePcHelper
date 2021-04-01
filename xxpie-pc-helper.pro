@@ -42,7 +42,7 @@ unix {
 
 win32 {
     INCLUDEPATH += $$PWD/qiniu/win/include
-    LIBS += -L$$PWD/qiniu/win/lib -lqiniu
+    LIBS += -L$$PWD/qiniu/win/bin -lqiniu
 }
 
 
