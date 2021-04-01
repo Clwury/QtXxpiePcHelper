@@ -10,12 +10,14 @@ CONFIG += c++11
 
 SOURCES += \
     config.cpp \
+    home.cpp \
     main.cpp \
     mainwindow.cpp \
     networkrequest.cpp
 
 HEADERS += \
     config.h \
+    home.h \
     mainwindow.h \
     networkrequest.h
 
