@@ -11,6 +11,9 @@ public:
 
 signals:
 
+private:
+    void initUI();
+    void initSignalSlots();
 };
 
 #endif // HOME_H

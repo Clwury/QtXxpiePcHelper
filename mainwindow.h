@@ -10,6 +10,7 @@
 #include <QPixmap>
 #include <QFile>
 #include "networkrequest.h"
+#include "home.h"
 
 class MainWindow : public QMainWindow
 {
@@ -26,13 +27,17 @@ public:
 
     // 登录
     void accountLogin();
+    // 事件过滤
+    bool eventFilter(QObject *object, QEvent *event);
 
 private:
     bool m_pressed;
     QPoint m_point;
 
     QLabel *m_label;
-    QImage *m_image;
+    QLabel *m_close_label;
+    QImage m_close_img;
+    QImage m_close_hover_img;
     QLineEdit *m_userName;
     QLineEdit *m_passWord;
     QPushButton *m_login;

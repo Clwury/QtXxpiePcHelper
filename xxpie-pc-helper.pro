@@ -43,6 +43,8 @@ unix {
 win32 {
     INCLUDEPATH += $$PWD/qiniu/win/include
     LIBS += -L$$PWD/qiniu/win/bin -lqiniu
+    LIBS += -L$$PWD/ssl -llibcrypto-1_1
+    LIBS += -L$$PWD/ssl -llibssl-1_1
 }
 
 

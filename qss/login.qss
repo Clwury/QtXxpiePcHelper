@@ -1,7 +1,10 @@
 QMainWindow {
-    background-color: #ffffff;
+    background-color: #e1e1e1;
 }
 
+#m_close_label:hover {
+/*    background: #fa4545;*/
+}
 /*QVBoxLayout {
     width: 200px;
 }*/
@@ -14,9 +17,9 @@ QMainWindow {
 QPushButton {
     border: 2px solid #d1d1d1;
     border-radius: 10px;
-    background: #fdd7d7;
+    background: #ffffff;
 }
 
 QPushButton:pressed {
-    background: #fa4545;
+    background: #ff4e28;
 }

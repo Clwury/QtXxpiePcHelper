@@ -20,9 +20,18 @@ MainWindow::~MainWindow()
 
 void MainWindow::initUI()
 {
+    m_close_label = new QLabel();
+    m_close_img.load(":/images/close.svg");
+    m_close_hover_img.load(":/images/hover-close.svg");
+    m_close_label->setPixmap(QPixmap::fromImage(m_close_img));
+//    m_close_label->setAlignment(Qt::AlignTop);
+    m_close_label->setObjectName("m_close_label");
+    m_close_label->setFixedSize(40, 30);
+    m_close_label->setAlignment(Qt::AlignCenter);
+    // logo
     m_label = new QLabel();
 //    m_label->setStyleSheet("border:2px solid red;");
-    m_image = new QImage;
+    QImage *m_image = new QImage;
     m_image->load(":/images/ic_login_logo--imgs.png");
     QImage scaleImage = m_image->scaledToWidth(200, Qt::FastTransformation);
     m_label->setPixmap(QPixmap::fromImage(scaleImage));
@@ -41,6 +50,8 @@ void MainWindow::initUI()
     m_login->setFixedWidth(100);
     m_login->setFixedHeight(40);
     QVBoxLayout *vLayout = new QVBoxLayout;
+    vLayout->setContentsMargins(0, 0, 0, 0);
+    vLayout->addWidget(m_close_label, 0, Qt::AlignRight);
     vLayout->addStretch(4);
     vLayout->addWidget(m_label, 0, Qt::AlignHCenter);
     vLayout->addStretch(3);
@@ -67,6 +78,9 @@ void MainWindow::initUI()
         this->setStyleSheet(stylesheet);
         file.close();
     }
+//    this->setStyleSheet("margin: 0;padding: 0;border-radius: 5px;border:2px solid red;");
+    // 控件安装事件过滤器
+    m_close_label->installEventFilter(this);
 
     m_request = new networkrequest();
 }
@@ -74,7 +88,10 @@ void MainWindow::initUI()
 void MainWindow::initSignalSlots()
 {
     connect(m_login, &QPushButton::clicked, this, &MainWindow::accountLogin);
+//    connect(m_close_label, &QLabel::linkHovered, this, &MainWindow::closeBtnHover);
+//    connect(m_close_label, &QLabel::linkActivated, this, &MainWindow::close);
 }
+
 
 void MainWindow::accountLogin()
 {
@@ -105,11 +122,37 @@ void MainWindow::accountLogin()
         if (response.contains("token"))
         {
             qDebug() << response.value("token") << "登录成功";
-            this->close();
             // 打开主页面
-
+            home m;
+            m.show();
+            this->close();
         }
     }
+}
+
+bool MainWindow::eventFilter(QObject *object, QEvent *event)
+{
+    // 判断控件
+    if (object == m_close_label)
+    {
+        // 判断事件
+        if (event->type() == QEvent::HoverEnter)
+        {
+            m_close_label->setStyleSheet("background: #fa4545;");
+            m_close_label->setPixmap(QPixmap::fromImage(m_close_hover_img));
+            return true;
+        } else if (event->type() == QEvent::HoverLeave)
+        {
+            m_close_label->setStyleSheet("");
+            m_close_label->setPixmap(QPixmap::fromImage(m_close_img));
+            return true;
+        } else if (event->type() == QEvent::MouseButtonPress)
+        {
+            this->close();
+            return true;
+        }
+    }
+    return QMainWindow::eventFilter(object, event);
 }
 
 void MainWindow::mousePressEvent(QMouseEvent *event)
