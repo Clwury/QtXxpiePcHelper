@@ -2,6 +2,9 @@
 #define HOME_H
 
 #include <QMainWindow>
+#include <QScreen>
+#include <QHBoxLayout>
+#include "networkrequest.h"
 
 class home : public QMainWindow
 {
@@ -12,6 +15,8 @@ public:
 signals:
 
 private:
+
+
     void initUI();
     void initSignalSlots();
 };

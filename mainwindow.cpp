@@ -31,11 +31,13 @@ void MainWindow::initUI()
     // logo
     m_label = new QLabel();
 //    m_label->setStyleSheet("border:2px solid red;");
-    QImage *m_image = new QImage;
-    m_image->load(":/images/ic_login_logo--imgs.png");
-    QImage scaleImage = m_image->scaledToWidth(200, Qt::FastTransformation);
-    m_label->setPixmap(QPixmap::fromImage(scaleImage));
-    m_label->setFixedHeight(scaleImage.height());
+    QImage m_image;
+    m_image.load(":/images/ic_login_logo--imgs.png");
+//    QImage scaleImage = m_image->scaledToWidth(180, Qt::SmoothTransformation);
+    m_label->setPixmap(QPixmap::fromImage(m_image).scaledToWidth(180, Qt::SmoothTransformation));
+//    m_label->setPixmap(QPixmap::fromImage(m_image));
+
+//    m_label->setFixedHeight(scaleImage.height());
     m_userName = new QLineEdit;
     m_userName->setPlaceholderText("请输入号码");
     m_userName->setText("18390216081");
@@ -51,7 +53,9 @@ void MainWindow::initUI()
     m_login->setFixedHeight(40);
     QVBoxLayout *vLayout = new QVBoxLayout;
     vLayout->setContentsMargins(0, 0, 0, 0);
+#ifndef Q_OS_MACOS
     vLayout->addWidget(m_close_label, 0, Qt::AlignRight);
+#endif
     vLayout->addStretch(4);
     vLayout->addWidget(m_label, 0, Qt::AlignHCenter);
     vLayout->addStretch(3);
@@ -123,9 +127,9 @@ void MainWindow::accountLogin()
         {
             qDebug() << response.value("token") << "登录成功";
             // 打开主页面
-            home m;
-            m.show();
-            this->close();
+            home *m = new home(this);
+            m->show();
+            this->hide();
         }
     }
 }
