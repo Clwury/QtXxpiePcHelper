@@ -2,7 +2,7 @@
 #include "home.h"
 
 #include <QApplication>
-#define MAIN 0
+#define MAIN 1
 
 
 int main(int argc, char *argv[])

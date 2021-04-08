@@ -1,5 +1,9 @@
 QT       += core gui network
 
+unix {
+    QT += macextras
+}
+
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
 CONFIG += c++11
