@@ -4,12 +4,21 @@ MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
 {
 #ifdef Q_OS_MACOS
-    this->setUnifiedTitleAndToolBarOnMac(true);
+//    this->setUnifiedTitleAndToolBarOnMac(true);
+    NSView *view = (NSView *) this->winId();
+    NSWindow *window = [view window];
+    window.titlebarAppearsTransparent = YES;
+
+    window.styleMask = NSWindowStyleMaskClosable | NSWindowStyleMaskMiniaturizable
+                       | NSWindowStyleMaskResizable | NSWindowStyleMaskTitled
+                       | NSWindowStyleMaskFullSizeContentView;
+    NSButton *button = [window standardWindowButton:NSWindowZoomButton];
+    [button setEnabled:NO];
 #else
     this->setWindowFlags(Qt::FramelessWindowHint | windowFlags());
 #endif
 
-    this->setFixedSize(400, 300);
+    this->setFixedSize(375, 300);
     initUI();
     initSignalSlots();
 }
@@ -43,6 +52,7 @@ void MainWindow::initUI()
     m_userName->setText("18390216081");
 //    m_userName->setMaximumWidth(150);
     m_userName->setFixedWidth(150);
+
     m_passWord = new QLineEdit;
     m_passWord->setEchoMode(QLineEdit::Password);
     m_passWord->setText("123456");
@@ -86,7 +96,7 @@ void MainWindow::initUI()
     // 控件安装事件过滤器
     m_close_label->installEventFilter(this);
 
-    m_request = new networkrequest();
+    m_request = new NetworkRequest();
 }
 
 void MainWindow::initSignalSlots()
@@ -95,7 +105,6 @@ void MainWindow::initSignalSlots()
 //    connect(m_close_label, &QLabel::linkHovered, this, &MainWindow::closeBtnHover);
 //    connect(m_close_label, &QLabel::linkActivated, this, &MainWindow::close);
 }
-
 
 void MainWindow::accountLogin()
 {
@@ -108,8 +117,10 @@ void MainWindow::accountLogin()
         {"username", userName}
     };
     QJsonObject response;
-    response = m_request->get("/sm/validateElseMachineIsAdmin", params);
-    if (response.contains("code") && !response.value("code").toInt())
+    response = m_request->get("/sm/validateElseMachineIsAdmin", params, false);
+    // 强制登录验证待定
+    qDebug() << response;
+    if (response.contains("result"))
     {
         qDebug() << "after take" << response;
         QString md5(const QString &str);
@@ -120,16 +131,24 @@ void MainWindow::accountLogin()
             {"machine_id", MACHINE_ID},
             {"password", md5(password)}
         };
-        response = m_request->post("/photographer/mine/signInByPassword", params);
+        response = m_request->post("/photographer/mine/signInByPassword", params, false);
 
         // 登录成功
         if (response.contains("token"))
         {
             qDebug() << response.value("token") << "登录成功";
+            // 更新token缓存
+            NetworkRequest::cacheToken(response.value("token").toString());
             // 打开主页面
-            home *m = new home(this);
-            m->show();
+            #ifdef Q_OS_MACOS
+                unixhome *unix_m = new unixhome();
+                unix_m->show();
+            #else
+                home *m = new home();
+                m->show();
+            #endif
             this->hide();
+            this->destroy();
         }
     }
 }

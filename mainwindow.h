@@ -12,6 +12,14 @@
 #include "networkrequest.h"
 #include "home.h"
 
+#ifdef Q_OS_MACOS
+    #include "unixhome.h"
+#endif
+
+#import <Foundation/Foundation.h>
+#import <AppKit/AppKit.h>
+#import <AppKit/NSWindow.h>
+
 class MainWindow : public QMainWindow
 {
     Q_OBJECT
@@ -41,7 +49,7 @@ private:
     QLineEdit *m_userName;
     QLineEdit *m_passWord;
     QPushButton *m_login;
-    networkrequest *m_request;
+    NetworkRequest *m_request;
 
     void initUI();
     void initSignalSlots();

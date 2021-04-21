@@ -1,6 +1,6 @@
 QT       += core gui network
 
-unix {
+macx {
     QT += macextras
 }
 
@@ -14,16 +14,25 @@ CONFIG += c++11
 
 SOURCES += \
     config.cpp \
+    customsearchbar.cpp \
     home.cpp \
-    main.cpp \
-    mainwindow.cpp \
+    main.mm \
+#    mainwindow.mm \
     networkrequest.cpp
 
 HEADERS += \
     config.h \
+    customsearchbar.h \
     home.h \
-    mainwindow.h \
-    networkrequest.h
+#    mainwindow.h \
+    networkrequest.h \
+
+macx {
+    OBJECTIVE_HEADERS += unixhome.h \
+                        mainwindow.h
+    OBJECTIVE_SOURCES += unixhome.mm \
+                        mainwindow.mm
+}
 
 TRANSLATIONS += \
     xxpie-pc-helper_zh_CN.ts
@@ -39,9 +48,12 @@ FORMS += \
 RESOURCES += \
     resource.qrc
 
-unix {
+macx {
     INCLUDEPATH += $$PWD/qiniu/mac/include
     LIBS += -L$$PWD/qiniu/mac/lib -lqiniu
+
+    LIBS += -framework Foundation
+    LIBS += -framework AppKit
 }
 
 win32 {

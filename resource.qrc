@@ -3,6 +3,10 @@
         <file>images/close.svg</file>
         <file>images/hover-close.svg</file>
         <file>images/ic_login_logo--imgs.png</file>
+        <file>images/search-icon.svg</file>
+        <file>images/add.svg</file>
+        <file>images/album.svg</file>
+        <file>images/transport.svg</file>
     </qresource>
     <qresource prefix="/qss">
         <file>qss/login.qss</file>

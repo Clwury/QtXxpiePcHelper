@@ -10,23 +10,28 @@
 #include <QJsonDocument>
 #include <QJsonParseError>
 #include <QEventLoop>
+#include <QTimer>
+#include <QStandardPaths>
+#include <QDir>
 
 extern const QUuid UID;
 extern const QString MACHINE_ID;
 
-class networkrequest : public QObject
+class NetworkRequest : public QObject
 {
     Q_OBJECT
 public:
-    explicit networkrequest(QObject *parent = nullptr);
-    QJsonObject get(const QString &url, const QJsonObject &params);
-    QJsonObject post(const QString &url, QJsonObject &params);
-
+    explicit NetworkRequest(QObject *parent = nullptr);
+    QJsonObject get(const QString &url, const QJsonObject &params, const bool &async);
+    QJsonObject post(const QString &url, QJsonObject &params, const bool &async);
+    static void cacheToken(const QString token);
+    QByteArray getImage(const QString &url, const bool &async);
 signals:
 
 private:
     QNetworkAccessManager *networkAccessManager;
     QNetworkReply *networkReply;
+    static QString token;
 };
 
 #endif // NETWORKREQUEST_H
