@@ -16,6 +16,8 @@ SOURCES += \
     config.cpp \
     customsearchbar.cpp \
     home.cpp \
+    imageview.cpp \
+    itemdelegate.cpp \
     main.mm \
 #    mainwindow.mm \
     networkrequest.cpp
@@ -25,6 +27,8 @@ HEADERS += \
     customsearchbar.h \
     home.h \
 #    mainwindow.h \
+    imageview.h \
+    itemdelegate.h \
     networkrequest.h \
 
 macx {

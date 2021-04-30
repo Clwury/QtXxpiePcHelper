@@ -79,14 +79,17 @@ void unixhome::initUI()
     hLayout->addWidget(custom_search_bar);
 
     // main Content
-    QHBoxLayout *main_content_hLayout = new QHBoxLayout;
-    main_content_hLayout->setContentsMargins(0, 0, 0, 0);
-    main_content_hLayout->setAlignment(Qt::AlignLeft);
-    bottom_widget->setLayout(main_content_hLayout);
+    MainContentLayout = new QHBoxLayout;
+    MainContentLayout->setContentsMargins(0, 0, 0, 0);
+    MainContentLayout->setAlignment(Qt::AlignLeft);
+    bottom_widget->setLayout(MainContentLayout);
     QWidget *side_bar = new QWidget;
-    main_content_hLayout->addWidget(side_bar);
+    side_bar->setObjectName("side_bar");
+    MainContentLayout->addWidget(side_bar);
     side_bar->setFixedWidth(72);
-    side_bar->setStyleSheet("border:1px solid #eaeaea;");
+    side_bar->setStyleSheet("#side_bar{border-right:1px solid #eaeaea;}");
+//    side_bar->setStyleSheet("border:1px solid red;");
+
     QVBoxLayout *side_bar_vLayout = new QVBoxLayout;
     side_bar_vLayout->setContentsMargins(0, 20, 0, 0);
     side_bar_vLayout->setAlignment(Qt::AlignHCenter | Qt::AlignTop);
@@ -131,9 +134,6 @@ void unixhome::initUI()
     transport_text_label->setStyleSheet("font-size: 13px;color: #494949;");
     side_bar_vLayout->addWidget(transport_text_label);
     side_bar_vLayout->addSpacing(25);
-
-
-    // 相册列表
 
 }
 
@@ -186,6 +186,93 @@ void unixhome::initData()
         hLayout->addSpacing(240);
         hLayout->addWidget(icon_photo_label);
     }
-
-
+    initAlbumList(albums);
 }
+
+void unixhome::initAlbumList(const QJsonObject &albumList)
+{
+    albumListView = new QListView;
+    albumListModel = new QStandardItemModel;
+    albumListView->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+    albumListView->setFrameShape(QFrame::NoFrame);
+    albumListView->setModel(albumListModel);
+    albumListView->setSelectionRectVisible(true);
+    albumListView->setSelectionMode(QAbstractItemView::ExtendedSelection);
+    albumListView->setEditTriggers(QAbstractItemView::NoEditTriggers);
+    connect(albumListView, &QListView::doubleClicked, this, &unixhome::toAlbum);
+
+    QVBoxLayout *albumListLayout = new QVBoxLayout;
+    albumListLayout->setContentsMargins(0, 20, 10, 0);
+    albumListLayout->addWidget(albumListView);
+    QWidget *albumListWidget = new QWidget;
+    albumListWidget->setObjectName("albumListWidget");
+    MainContentLayout->addWidget(albumListWidget);
+    albumListWidget->setFixedWidth(250);
+//    albumListWidget->setStyleSheet("border:1px solid green;");
+    albumListWidget->setLayout(albumListLayout);
+    albumListWidget->setStyleSheet("#albumListWidget{border-right:1px solid #eaeaea;}");
+
+    qDebug() << "相册列表: " << albumList.value("albums");
+    qDebug() << "相册数量: " << albumList["count"];
+    QJsonArray albums = albumList.value("albums").toArray();
+    for (auto album : albums)
+    {
+        const QJsonObject albumObject = album.toObject();
+        qDebug() << "相册名: " << albumObject["task_name"];
+        QStandardItem *albumItem = new QStandardItem;
+        albumItem->setSizeHint(QSize(0, 20));
+        albumItem->setText(albumObject["task_name"].toString());
+        albumItem->setData(albumObject, Qt::UserRole);
+        albumListModel->appendRow(albumItem);
+    }
+}
+
+void unixhome::toAlbum(const QModelIndex &modelIndex)
+{
+    qDebug() << modelIndex.data(Qt::UserRole).toJsonObject()["shoot_task_id"] << modelIndex.data(Qt::UserRole).toJsonObject()["task_name"];
+    QJsonObject albumInfo = modelIndex.data(Qt::UserRole).toJsonObject();
+    QString albumId = albumInfo["shoot_task_id"].toString();
+    // 获取子相册信息
+    QJsonObject params
+    {
+        {"album_id", albumId}
+    };
+    QJsonObject subAlbums = m_request->get("/pm/querySubAlbums", params, false);
+    qDebug() << "子相册信息: " << subAlbums;
+
+    // 获取相册图片
+    params = QJsonObject
+    {
+        {"album_id", albumId},
+        {"page_no", 1},
+        {"page_size", 50},
+        {"item_retouch_status", "ALL"},
+        {"sub_album_ids", "[]"},
+        {"photographer_ids", "[]"}
+    };
+    QJsonObject albumImages = m_request->get("/pm/queryAlbumItemsPg4PCHelper", params, false);
+    qDebug() << albumImages["count"];
+
+    imageListView = new QListView;
+    imageModel = new QStandardItemModel;
+    imageDelegate = new ItemDelegate;
+    imageListView->setItemDelegate(imageDelegate);
+    imageListView->setSpacing(15);
+    imageListView->setModel(imageModel);
+    imageListView->setDragEnabled(false);
+
+    for (auto image : albumImages["items"].toArray())
+    {
+        QJsonObject imageItem = image.toObject();
+        qDebug() << "图片名: " << imageItem.value("file_name");
+        ImageView imageView(imageItem["url_thumbnail"].toString(), imageItem["file_name"].toString());
+        break;
+//        QStandardItem *imageModelItem = new QStandardItem;
+//        imageModelItem->setData(QVariant::fromValue(imageView), Qt::UserRole);
+//        imageItemModel->appendRow(imageModelItem);
+    }
+}
+
+
+
+

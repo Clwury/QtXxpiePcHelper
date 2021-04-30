@@ -88,7 +88,8 @@ QJsonObject NetworkRequest::get(const QString &url, const QJsonObject &params, c
     if (jsonPareError.error != QJsonParseError::NoError)
     {
         qDebug() << "response Json 解析失败";
-        return QJsonObject{
+        return QJsonObject
+        {
             {"error", "Json Parse Error"}
         };
     }
@@ -107,13 +108,21 @@ QJsonObject NetworkRequest::get(const QString &url, const QJsonObject &params, c
         if (responseObject.value("result").isObject())
         {
             return responseObject.value("result").toObject();
+        } else if (responseObject.value("result").isArray()) {
+            return QJsonObject
+            {
+                {"result", responseObject.value("result")}
+            };
         } else if (responseObject.value("result").isString()) {
-            return QJsonObject{
-                {"result", responseObject.value("result").toString()}
+            return QJsonObject
+            {
+                {"result", responseObject.value("result")}
             };
         }
+
     }
-    return QJsonObject{
+    return QJsonObject
+    {
         {"error", "Get Request Error"},
         {"code", responseStatusCode.toInt()}
     };
@@ -175,7 +184,8 @@ QJsonObject NetworkRequest::post(const QString &url, QJsonObject &params, const 
         if (!timer.isActive())
         {
             networkReply->abort();
-            return QJsonObject{
+            return QJsonObject
+            {
                 {"error", "Request TimeOut"}
             };
         }
@@ -193,7 +203,8 @@ QJsonObject NetworkRequest::post(const QString &url, QJsonObject &params, const 
     if (jsonPareError.error != QJsonParseError::NoError)
     {
         qDebug() << "response Json 解析失败";
-        return QJsonObject{
+        return QJsonObject
+        {
             {"error", "Json Parse Error"}
         };
     }
@@ -214,13 +225,21 @@ QJsonObject NetworkRequest::post(const QString &url, QJsonObject &params, const 
             return responseObject;
         } else if (responseObject.value("result").isObject()) {
             return responseObject.value("result").toObject();
+        } else if (responseObject.value("result").isArray()) {
+            return QJsonObject
+            {
+                {"result", responseObject.value("result")}
+            };
         } else if (responseObject.value("result").isString()) {
-            return QJsonObject{
-                {"result", responseObject.value("result").toString()}
+            return QJsonObject
+            {
+                {"result", responseObject.value("result")}
             };
         }
+
     }
-    return QJsonObject{
+    return QJsonObject
+    {
         {"error", "Request Error"},
         {"code", responseStatusCode.toInt()}
     };
@@ -239,10 +258,10 @@ void NetworkRequest::cacheToken(const QString _token)
     bool open = 0;
     if (!dir.entryList().contains("Certificate"))
     {
-        open = file->open(QIODevice::WriteOnly|QIODevice::Text);
+        open = file->open(QIODevice::WriteOnly | QIODevice::Text);
 
     } else {
-        open = file->open(QIODevice::WriteOnly|QIODevice::Text|QFile::Truncate);
+        open = file->open(QIODevice::WriteOnly | QIODevice::Text | QFile::Truncate);
     }
     if (open)
     {
