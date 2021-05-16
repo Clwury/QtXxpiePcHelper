@@ -5,7 +5,6 @@
 #include <typeinfo>
 #include <QStyleOptionViewItem>
 #include "networkrequest.h"
-#include "config.h"
 
 class ImageView : public QObject
 {
@@ -14,7 +13,13 @@ public:
     ImageView();
     ImageView(const ImageView &imageView);
     ~ImageView();
-    ImageView(QString url_thumbnail, QString file_name);
+    ImageView(QString url_thumbnail, QString file_name, int type);
+    enum TYPE {
+        image,
+        addImageBtn,
+        subAlbum
+    };
+
     enum STATE {
         loading,
         succeed,
@@ -25,18 +30,20 @@ public:
         contain,
         percentage
     };
+    int getType();
     int getState();
     QString getUrlThumbnail();
     QString getFileName();
-    QPixmap getSucceedPixmap();
-
+    QPixmap getPixmap();
+    void pixmapLoad();
 
 signals:
 
 public slots:
-    void pixmapLoad();
+
 
 private:
+    int type;
     int state;
     int style;
     QString cachePath; // 缓存目录
@@ -44,6 +51,7 @@ private:
     QString fileName; // 文件名
     QPixmap loadingPixmap;
     QPixmap succeedPixmap;
+    QPixmap pixmap;
     QNetworkAccessManager *networkManager;
     QNetworkReply *reply;
 };

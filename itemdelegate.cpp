@@ -7,6 +7,7 @@ ItemDelegate::ItemDelegate()
 
 QSize ItemDelegate::sizeHint(const QStyleOptionViewItem &option, const QModelIndex &index) const
 {
+//    qDebug() << "item resize";
     return QSize(140, 160);
 }
 
@@ -17,11 +18,12 @@ void ItemDelegate::paint(QPainter *painter, const QStyleOptionViewItem &option, 
         painter->save();
 
         QVariant variant = index.data(Qt::UserRole);
-        ImageView imageItem = variant.value<ImageView>();
+        ImageView *imageItem = variant.value<ImageView *>();
 
         QStyleOptionViewItem viewOption(option);
 
         QRectF rect;
+//        qDebug() << "item area" << option.rect.x() << option.rect.y() << option.rect.width() << option.rect.height();
         rect.setX(option.rect.x());
         rect.setY(option.rect.y());
         rect.setWidth(option.rect.width() - 1);
@@ -48,17 +50,34 @@ void ItemDelegate::paint(QPainter *painter, const QStyleOptionViewItem &option, 
             painter->setPen(QPen(QColor("#e3e3e5")));
             painter->setBrush(QColor("#e3e3e5"));
             painter->drawPath(path);
+        } else {
+            painter->setPen(QPen(Qt::white));
+            painter->setBrush(Qt::NoBrush);
+            painter->drawPath(path);
         }
 
         // 绘制缩略图和文件名
         QRect thumbnailRect = QRect(rect.left() + 10, rect.top() + 10, 120, 120);
-        QRect fileNameRect = QRect(thumbnailRect.bottom() + 10, rect.left() + 10, 100, 20);
+        QRect fileNameRect = QRect(rect.left(), thumbnailRect.bottom() + 10, rect.width(), 20);
+//        qDebug() << "获取缩略图信息" << index.row() << imageItem->getFileName() << imageItem->getSucceedPixmap();
+        if (imageItem->getState() == ImageView::STATE::succeed)
+        {
+            if (imageItem->getType() == ImageView::TYPE::image)
+            {
+                painter->drawPixmap(rect.left() + 10, rect.top() + 10, 120, 120, imageItem->getPixmap());
+            } else if (imageItem->getType() == ImageView::TYPE::addImageBtn) {
+                painter->drawPixmap(rect.left() + 40, rect.top() + 40, 60, 60, imageItem->getPixmap());
+            }
 
-        painter->drawPixmap(rect.left() + 10, rect.top() + 10, 120, 120, imageItem.getSucceedPixmap());
+        } else if (imageItem->getState() == ImageView::STATE::failed) {
+            painter->drawPixmap(rect.left() + 10, rect.top() + 25, 120, 90, imageItem->getPixmap());
+        }
 
-        painter->setPen(QPen(Qt::gray));
-        painter->setFont(QFont("Times", 10));
-        painter->drawText(fileNameRect, imageItem.getFileName());
+        painter->setPen(QPen(QColor("#000000")));
+        painter->setFont(QFont("Times", 12));
+        QFontMetrics fontMetrics(QFont("Times", 12));
+        QString fileNameText = fontMetrics.elidedText(imageItem->getFileName(), Qt::ElideRight, rect.width());
+        painter->drawText(fileNameRect, Qt::AlignCenter, fileNameText);
 
         painter->restore();
     }

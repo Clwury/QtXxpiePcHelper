@@ -97,14 +97,14 @@ QJsonObject NetworkRequest::get(const QString &url, const QJsonObject &params, c
     {
         QJsonObject responseObject = jsonDocument.object();
         // 遍历response
-        qDebug() << "<<<<<";
+//        qDebug() << "<<<<<";
         QJsonObject::const_iterator i = responseObject.constBegin();
         QJsonObject::const_iterator e = responseObject.constEnd();
         while (i != e) {
-            qDebug() << i.key() << ":" << i.value();
+//            qDebug() << i.key() << ":" << i.value();
             i++;
         }
-        qDebug() << ">>>>>";
+//        qDebug() << ">>>>>";
         if (responseObject.value("result").isObject())
         {
             return responseObject.value("result").toObject();
@@ -212,14 +212,14 @@ QJsonObject NetworkRequest::post(const QString &url, QJsonObject &params, const 
     {
         QJsonObject responseObject = responseDocument.object();
         // 遍历response
-        qDebug() << "<<<<<";
+//        qDebug() << "<<<<<";
         QJsonObject::const_iterator i = responseObject.constBegin();
         QJsonObject::const_iterator e = responseObject.constEnd();
         while (i != e) {
-            qDebug() << i.key() << ":" << i.value();
+//            qDebug() << i.key() << ":" << i.value();
             i++;
         }
-        qDebug() << ">>>>>";
+//        qDebug() << ">>>>>";
         if (!responseObject.contains("result"))
         {
             return responseObject;
@@ -253,7 +253,7 @@ void NetworkRequest::cacheToken(const QString _token)
     qDebug() << "cache path" << cachePath;
     QDir dir;
     dir.cd(cachePath);
-    qDebug() << dir.entryList();
+//    qDebug() << dir.entryList();
     QFile *file = new QFile("Certificate");
     bool open = 0;
     if (!dir.entryList().contains("Certificate"))

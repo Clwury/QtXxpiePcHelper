@@ -4,6 +4,7 @@
 #include <QStyledItemDelegate>
 #include <QPainter>
 #include <QPainterPath>
+#include <QFontMetrics>
 
 #include "imageview.h"
 

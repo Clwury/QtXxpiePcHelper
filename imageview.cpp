@@ -1,7 +1,5 @@
 #include "imageview.h"
 
-QString md5(const QString &str);
-
 ImageView::ImageView()
 {
 
@@ -9,6 +7,7 @@ ImageView::ImageView()
 
 ImageView::ImageView(const ImageView &imageView)
 {
+    type = imageView.type;
     state = imageView.state;
     style = imageView.style;
     cachePath = imageView.cachePath;
@@ -16,6 +15,7 @@ ImageView::ImageView(const ImageView &imageView)
     fileName = imageView.fileName;
     loadingPixmap = imageView.loadingPixmap;
     succeedPixmap = imageView.succeedPixmap;
+    pixmap = imageView.pixmap;
 //    networkManager = new QNetworkAccessManager;
 }
 
@@ -24,39 +24,58 @@ ImageView::~ImageView()
 
 }
 
-ImageView::ImageView(QString url_thumbnail, QString file_name) : urlThumbnail(url_thumbnail), fileName(file_name)
+ImageView::ImageView(QString url_thumbnail, QString file_name, int type) : type(type), urlThumbnail(url_thumbnail), fileName(file_name)
 {
+    if (type == TYPE::addImageBtn)
+    {
+        state = STATE::succeed;
+        pixmap = QPixmap(":/images/add_image.png").scaledToWidth(60, Qt::SmoothTransformation);
+        return;
+    }
     state = STATE::loading;
     style = STYLE::contain;
 
     // 设置缓存目录
     cachePath = QStandardPaths::displayName(QStandardPaths::CacheLocation);
-    QDir dir(cachePath + QDir::separator() + "thumbnail");
-    if (!dir.exists())
+    QDir dir;
+    dir.cd(cachePath);
+    if (!dir.entryList().contains("thumbnail"))
     {
-        dir.mkdir(cachePath + QDir::separator() + "thumbnail");
+        dir.mkdir("thumbnail");
     }
+//    QDir dir(cachePath + QDir::separator() + "thumbnail");
+//    if (!dir.exists())
+//    {
+//        dir.mkdir(cachePath + QDir::separator() + "thumbnail");
+//    }
+//    qDebug() << "缓存目录: " << cachePath;
     networkManager = new QNetworkAccessManager;
 
     // 判断是否有缓存
-    QString thumbnailMd5 = md5(urlThumbnail);
-    QFile file(cachePath + QDir::separator() + thumbnailMd5);
-    if (!file.exists())
-    {
-        qDebug() << "start request---" << urlThumbnail;
-        reply = networkManager->get(QNetworkRequest(QUrl(urlThumbnail)));
-        connect(reply, &QNetworkReply::finished, [&] {
-            pixmapLoad();
-        });
-//        connect(reply, &QNetworkReply::finished, this, &ImageView::pixmapLoad);
-    } else {
-        if (file.open(QIODevice::ReadOnly))
-        {
-            QByteArray bytes = file.readAll();
-            succeedPixmap.loadFromData(bytes);
-            state = STATE::succeed;
-        }
-    }
+//    QString thumbnailMd5 = md5(urlThumbnail);
+//    QFile file1(cachePath + QDir::separator() + "thumbnail" + QDir::separator() + "1234");
+//    qDebug() << "file1 exists" << file1.exists();
+    dir.cd("thumbnail");
+//    QFile file(cachePath + QDir::separator() + "thumbnail" + QDir::separator() + thumbnailMd5);
+//    if (!dir.entryList().contains(thumbnailMd5))
+//    {
+//    qDebug() << "start request---" << urlThumbnail;
+    reply = networkManager->get(QNetworkRequest(QUrl(urlThumbnail)));
+    connect(reply, &QNetworkReply::finished, this, &ImageView::pixmapLoad);
+//    } else {
+//        QFile file(thumbnailMd5);
+//        if (file.open(QIODevice::ReadOnly))
+//        {
+//            QByteArray bytes = file.readAll();
+//            succeedPixmap.loadFromData(bytes);
+//            state = STATE::succeed;
+//        }
+    //    }
+}
+
+int ImageView::getType()
+{
+    return type;
 }
 
 int ImageView::getState()
@@ -74,36 +93,47 @@ QString ImageView::getFileName()
     return fileName;
 }
 
-QPixmap ImageView::getSucceedPixmap()
+QPixmap ImageView::getPixmap()
 {
-    return succeedPixmap;
+    return pixmap;
 }
 
 void ImageView::pixmapLoad()
 {
-    qDebug() << "请求完成";
     // 获取图片数据
     if (reply->error() == QNetworkReply::NoError)
     {
-        qDebug() << "开始写入缓存";
+//        qDebug() << "开始写入缓存";
         QByteArray bytes = reply->readAll();
-        succeedPixmap.loadFromData(bytes);
+        pixmap.loadFromData(bytes);
         state = STATE::succeed;
-        // 写入缓存
-        QString thumbnailMd5 = md5(urlThumbnail);
-        QFile file(cachePath + QDir::separator() + thumbnailMd5);
-        if (!file.exists())
-        {
-            file.open(QIODevice::WriteOnly);
-            file.close();
-        }
-        if (file.open(QIODevice::Truncate))
-        {
-            file.write(bytes);
-        }
-        file.close();
+//        // 写入缓存
+//        QString thumbnailMd5 = md5(urlThumbnail);
+//        qDebug() << "缓存文件名" << thumbnailMd5;
+//        QDir dir;
+//        dir.cd(cachePath);
+//        dir.cd("thumbnail");
+//        qDebug() << "absolute path" << dir.makeAbsolute() << dir.absolutePath();
+// //       QFile file(cachePath + QDir::separator() + "thumbnail" + QDir::separator() + thumbnailMd5);
+//        QFile file(dir.absolutePath() + QDir::separator() + thumbnailMd5);
+//        qDebug() << file << "写入文件名";
+//        if (!file.exists())
+//        {
+//            file.open(QIODevice::WriteOnly);
+//            file.close();
+//        }
+//        bool open = file.open(QIODevice::WriteOnly | QIODevice::Truncate);
+//        qDebug() << "file opened" << open;
+//        if (open)
+//        {
+//            qDebug() << urlThumbnail << thumbnailMd5 << "cache write bytes complete";
+//            file.write(bytes);
+//        }
+//        file.close();
+//        qDebug() << "写入完成";
     } else {
         state = STATE::failed;
+        pixmap = QPixmap(":/images/error.jpg").scaledToWidth(120, Qt::SmoothTransformation);
         qDebug() << "图片加载失败";
     }
 //    networkManager->deleteLater();
