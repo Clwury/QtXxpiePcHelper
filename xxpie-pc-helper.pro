@@ -7,6 +7,7 @@ macx {
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
 DEFINES += QT_NO_DEBUG_OUTPUT
+DEFINES += QT_MESSAGELOGCONTEXT
 CONFIG += c++11
 
 # You can make your code fail to compile if it uses deprecated APIs.
@@ -19,6 +20,7 @@ SOURCES += \
     home.cpp \
     imageview.cpp \
     itemdelegate.cpp \
+    log.cpp \
     main.mm \
 #    mainwindow.mm \
     networkrequest.cpp
@@ -30,6 +32,7 @@ HEADERS += \
 #    mainwindow.h \
     imageview.h \
     itemdelegate.h \
+    log.h \
     networkrequest.h \
 
 macx {

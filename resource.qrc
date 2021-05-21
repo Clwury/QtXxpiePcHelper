@@ -9,7 +9,9 @@
         <file>images/transport.svg</file>
         <file>images/tab_close.png</file>
         <file>images/error.jpg</file>
+        <file>images/folder.png</file>
         <file>images/add_image.png</file>
+        <file>images/img_loading.png</file>
     </qresource>
     <qresource prefix="/qss">
         <file>qss/login.qss</file>

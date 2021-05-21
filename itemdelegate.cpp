@@ -20,6 +20,8 @@ void ItemDelegate::paint(QPainter *painter, const QStyleOptionViewItem &option, 
         QVariant variant = index.data(Qt::UserRole);
         ImageView *imageItem = variant.value<ImageView *>();
 
+        int i = index.data(Qt::UserRole + 1)sdigufsdiofsio;fj
+
         QStyleOptionViewItem viewOption(option);
 
         QRectF rect;
@@ -60,13 +62,17 @@ void ItemDelegate::paint(QPainter *painter, const QStyleOptionViewItem &option, 
         QRect thumbnailRect = QRect(rect.left() + 10, rect.top() + 10, 120, 120);
         QRect fileNameRect = QRect(rect.left(), thumbnailRect.bottom() + 10, rect.width(), 20);
 //        qDebug() << "获取缩略图信息" << index.row() << imageItem->getFileName() << imageItem->getSucceedPixmap();
-        if (imageItem->getState() == ImageView::STATE::succeed)
+        if (imageItem->getState() == ImageView::STATE::loading)
         {
+            painter->drawPixmap(rect.left() + 10, rect.top() + 10, 120, 120, imageItem->getPixmap());
+        } else if (imageItem->getState() == ImageView::STATE::succeed) {
             if (imageItem->getType() == ImageView::TYPE::image)
             {
                 painter->drawPixmap(rect.left() + 10, rect.top() + 10, 120, 120, imageItem->getPixmap());
             } else if (imageItem->getType() == ImageView::TYPE::addImageBtn) {
                 painter->drawPixmap(rect.left() + 40, rect.top() + 40, 60, 60, imageItem->getPixmap());
+            } else if (imageItem->getType() == ImageView::TYPE::subAlbum) {
+                painter->drawPixmap(rect.left() + 30, rect.top() + 38, 80, 64, imageItem->getPixmap());
             }
 
         } else if (imageItem->getState() == ImageView::STATE::failed) {

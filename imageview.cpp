@@ -10,6 +10,7 @@ ImageView::ImageView(const ImageView &imageView)
     type = imageView.type;
     state = imageView.state;
     style = imageView.style;
+    index = imageView.index;
     cachePath = imageView.cachePath;
     urlThumbnail = imageView.urlThumbnail;
     fileName = imageView.fileName;
@@ -24,17 +25,21 @@ ImageView::~ImageView()
 
 }
 
-ImageView::ImageView(QString url_thumbnail, QString file_name, int type) : type(type), urlThumbnail(url_thumbnail), fileName(file_name)
+ImageView::ImageView(QString url_thumbnail, QString file_name, int type, int index) : type(type), index(index), urlThumbnail(url_thumbnail), fileName(file_name)
 {
     if (type == TYPE::addImageBtn)
     {
         state = STATE::succeed;
         pixmap = QPixmap(":/images/add_image.png").scaledToWidth(60, Qt::SmoothTransformation);
         return;
+    } else if (type == TYPE::subAlbum) {
+        state = STATE::succeed;
+        pixmap = QPixmap(":/images/folder.png").scaledToWidth(80, Qt::SmoothTransformation);
+        return;
     }
     state = STATE::loading;
     style = STYLE::contain;
-
+    pixmap = QPixmap(":/images/img_loading.png").scaledToWidth(120, Qt::SmoothTransformation);
     // 设置缓存目录
     cachePath = QStandardPaths::displayName(QStandardPaths::CacheLocation);
     QDir dir;
@@ -105,7 +110,13 @@ void ImageView::pixmapLoad()
     {
 //        qDebug() << "开始写入缓存";
         QByteArray bytes = reply->readAll();
-        pixmap.loadFromData(bytes);
+        QPixmap p;
+        if (p.loadFromData(bytes))
+        {
+            pixmap = p;
+        } else {
+            pixmap = QPixmap(":/images/error.jpg").scaledToWidth(120, Qt::SmoothTransformation);
+        }
         state = STATE::succeed;
 //        // 写入缓存
 //        QString thumbnailMd5 = md5(urlThumbnail);
@@ -136,5 +147,7 @@ void ImageView::pixmapLoad()
         pixmap = QPixmap(":/images/error.jpg").scaledToWidth(120, Qt::SmoothTransformation);
         qDebug() << "图片加载失败";
     }
-//    networkManager->deleteLater();
+    emit loadCompleted(index);
+    reply->deleteLater();
+    networkManager->deleteLater();
 }

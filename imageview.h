@@ -13,7 +13,7 @@ public:
     ImageView();
     ImageView(const ImageView &imageView);
     ~ImageView();
-    ImageView(QString url_thumbnail, QString file_name, int type);
+    ImageView(QString url_thumbnail, QString file_name, int type, int index);
     enum TYPE {
         image,
         addImageBtn,
@@ -38,7 +38,7 @@ public:
     void pixmapLoad();
 
 signals:
-
+    void loadCompleted(const int &);
 public slots:
 
 
@@ -46,6 +46,7 @@ private:
     int type;
     int state;
     int style;
+    int index;
     QString cachePath; // 缓存目录
     QString urlThumbnail; // 缩略图url
     QString fileName; // 文件名
