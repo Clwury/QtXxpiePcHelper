@@ -1,6 +1,6 @@
-#include "unixhome.h"
+#include "winhome.h"
 
-unixhome::unixhome(QWidget *parent) : QMainWindow(parent)
+winhome::winhome(QWidget *parent) : QMainWindow(parent)
 {
     initUI();
     initSignalSlots();
@@ -37,7 +37,7 @@ unixhome::unixhome(QWidget *parent) : QMainWindow(parent)
     albumBottomTabWidget->setLayout(albumBottomTabHLayout);
 }
 
-bool unixhome::eventFilter(QObject *object, QEvent *event)
+bool winhome::eventFilter(QObject *object, QEvent *event)
 {
     if (event->type() == QEvent::MouseButtonPress && object->objectName() == "albumTabBar")
     {
@@ -127,7 +127,7 @@ bool unixhome::eventFilter(QObject *object, QEvent *event)
     return QWidget::eventFilter(object, event);
 }
 
-void unixhome::initUI()
+void winhome::initUI()
 {
     resize(1200, 800);
     setStyleSheet("background-color: #eeefee;");
@@ -143,9 +143,10 @@ void unixhome::initUI()
     window.titlebarAppearsTransparent = YES;
 
     window.styleMask = NSWindowStyleMaskClosable | NSWindowStyleMaskMiniaturizable
-                       | NSWindowStyleMaskResizable | NSWindowStyleMaskTitled
-                       | NSWindowStyleMaskFullSizeContentView;
+            | NSWindowStyleMaskResizable | NSWindowStyleMaskTitled
+            | NSWindowStyleMaskFullSizeContentView;
 #endif
+
 
 //    NSTitlebarAccessoryViewController *vc = [[NSTitlebarAccessoryViewController alloc] init];
 //    vc.view = [[NSView alloc] initWithFrame:((NSView *)window.contentView).frame];
@@ -260,12 +261,12 @@ void unixhome::initUI()
     side_bar_vLayout->addSpacing(25);
 }
 
-void unixhome::initSignalSlots()
+void winhome::initSignalSlots()
 {
 
 }
 
-void unixhome::initData()
+void winhome::initData()
 {
     m_request = new NetworkRequest();
     // 获取相册列表
@@ -312,7 +313,7 @@ void unixhome::initData()
     initAlbumList(albums);
 }
 
-void unixhome::initAlbumList(const QJsonObject &albumList)
+void winhome::initAlbumList(const QJsonObject &albumList)
 {
     albumListView = new QListView;
     albumListModel = new QStandardItemModel;
@@ -349,7 +350,7 @@ void unixhome::initAlbumList(const QJsonObject &albumList)
         subcontrol-position:top;\
     }");
     albumListView->setEditTriggers(QAbstractItemView::NoEditTriggers);
-    connect(albumListView, &QListView::doubleClicked, this, &unixhome::openAlbum);
+    connect(albumListView, &QListView::doubleClicked, this, &winhome::openAlbum);
 
     QVBoxLayout *albumListLayout = new QVBoxLayout;
     albumListLayout->setContentsMargins(0, 20, 2, 0);
@@ -378,7 +379,7 @@ void unixhome::initAlbumList(const QJsonObject &albumList)
     }
 }
 
-void unixhome::openAlbum(const QModelIndex &modelIndex)
+void winhome::openAlbum(const QModelIndex &modelIndex)
 {
     try {
 
@@ -470,7 +471,7 @@ void unixhome::openAlbum(const QModelIndex &modelIndex)
     }
 }
 
-void unixhome::addAlbumTabBar(const QString &albumName, const bool &isFocus)
+void winhome::addAlbumTabBar(const QString &albumName, const bool &isFocus)
 {
     QWidget *albumTabBar = new QWidget;
     albumTabBar->setObjectName("albumTabBar");
@@ -543,7 +544,7 @@ void unixhome::addAlbumTabBar(const QString &albumName, const bool &isFocus)
 //    imageListLayout->addWidget(albumTabWidget); // 添加相册Tab栏ddfdsfdsfdsfsdf
 }
 
-QListView * unixhome::initAlbumImageList(const QString &albumId, const QString &albumName)
+QListView * winhome::initAlbumImageList(const QString &albumId, const QString &albumName)
 {
     // 获取子相册信息
     QJsonObject params
@@ -642,13 +643,13 @@ QListView * unixhome::initAlbumImageList(const QString &albumId, const QString &
 
         // 下拉滚动加载
         QScrollBar *imageVerticalScrollBar = imageListView->verticalScrollBar();
-        connect(imageVerticalScrollBar, &QScrollBar::valueChanged, this, &unixhome::onScrollBarValueChanged);
+        connect(imageVerticalScrollBar, &QScrollBar::valueChanged, this, &winhome::onScrollBarValueChanged);
     }
 
     return imageListView;
 }
 
-void unixhome::focusAlbum(const int &index)
+void winhome::focusAlbum(const int &index)
 {
     // 相册tab栏切换
     foreach (QWidget *w, albumTabList) {
@@ -676,7 +677,7 @@ void unixhome::focusAlbum(const int &index)
     qInfo() << "focus album success" << index;
 }
 
-void unixhome::loadSubAlbums(const QJsonArray &subAlbums)
+void winhome::loadSubAlbums(const QJsonArray &subAlbums)
 {
     if (subAlbums.size() > 0)
     {
@@ -691,7 +692,7 @@ void unixhome::loadSubAlbums(const QJsonArray &subAlbums)
     }
 }
 
-void unixhome::loadThumbnail(const QJsonObject &albumImages, const int &pageNo)
+void winhome::loadThumbnail(const QJsonObject &albumImages, const int &pageNo)
 {
     Q_UNUSED(pageNo);
     int count = albumImages["items"].toArray().size();
@@ -702,7 +703,7 @@ void unixhome::loadThumbnail(const QJsonObject &albumImages, const int &pageNo)
         QJsonObject imageItem = image.toObject();
 //        qDebug() << "图片名: " << imageItem.value("file_name");
         images[i] = new ImageView(imageItem["url_thumbnail"].toString(), imageItem ["file_name"].toString(), 0, openedAlbumLoaded[focusAlbumIndex]["loaded_index"]++);
-        connect(images[i], &ImageView::loadCompleted, this, &unixhome::updateListRow);
+        connect(images[i], &ImageView::loadCompleted, this, &winhome::updateListRow);
         QStandardItem *imageModelItem = new QStandardItem;
 //        qDebug() << "picture info" << images[i]->getFileName();
         imageModelItem->setData(QVariant::fromValue(images[i]), Qt::UserRole);
@@ -713,7 +714,7 @@ void unixhome::loadThumbnail(const QJsonObject &albumImages, const int &pageNo)
     }
 }
 
-void unixhome::updateListRow(const int &index)
+void winhome::updateListRow(const int &index)
 {
     QModelIndex i = albumListModel->index(index, 0, QModelIndex());
 //    QVariant variant = i.data(Qt::UserRole);
@@ -723,7 +724,7 @@ void unixhome::updateListRow(const int &index)
     qInfo() << index;
 }
 
-void unixhome::onScrollBarValueChanged(const int &value)
+void winhome::onScrollBarValueChanged(const int &value)
 {
 //    qDebug() << "scrollBar maxValue" << focusAlbumImageListView->verticalScrollBar()->maximum();
 //    qDebug() << value;

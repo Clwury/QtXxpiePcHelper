@@ -17,29 +17,37 @@ CONFIG += c++11
 SOURCES += \
     config.cpp \
     customsearchbar.cpp \
-    home.cpp \
     imageview.cpp \
     itemdelegate.cpp \
     log.cpp \
-    main.mm \
-#    mainwindow.mm \
-    networkrequest.cpp
+    networkrequest.cpp \
 
 HEADERS += \
     config.h \
     customsearchbar.h \
-    home.h \
-#    mainwindow.h \
     imageview.h \
     itemdelegate.h \
     log.h \
     networkrequest.h \
 
 macx {
-    OBJECTIVE_HEADERS += unixhome.h \
-                        mainwindow.h
-    OBJECTIVE_SOURCES += unixhome.mm \
-                        mainwindow.mm
+    OBJECTIVE_HEADERS += \
+        unixlogin.h \
+        unixhome.h
+    OBJECTIVE_SOURCES += \
+        main.mm \
+        unixhome.mm \
+        unixlogin.mm
+}
+
+win32 {
+    HEADERS += \
+        winlogin.h \
+        winhome.h
+    SOURCES += \
+        main.cpp \
+        winhome.cpp \
+        winlogin.cpp
 }
 
 TRANSLATIONS += \
@@ -51,7 +59,7 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
 
 FORMS += \
-    mainwindow.ui
+    winlogin.ui
 
 RESOURCES += \
     resource.qrc

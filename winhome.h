@@ -1,5 +1,5 @@
-#ifndef UNIXHOME_H
-#define UNIXHOME_H
+#ifndef WINHOME_H
+#define WINHOME_H
 
 #include <QMainWindow>
 #include <QScreen>
@@ -30,11 +30,11 @@
 
 
 
-class unixhome : public QMainWindow
+class winhome : public QMainWindow
 {
     Q_OBJECT
 public:
-    explicit unixhome(QWidget *parent = nullptr);
+    explicit winhome(QWidget *parent = nullptr);
 
 protected:
     // 事件过滤
@@ -89,4 +89,5 @@ private:
     void updateListRow(const int &); // 更新图片缩略图
     void onScrollBarValueChanged(const int &); // 图片列表下拉加载
 };
-#endif // UNIXHOME_H
+
+#endif // WINHOME_H

@@ -20,7 +20,7 @@ void ItemDelegate::paint(QPainter *painter, const QStyleOptionViewItem &option, 
         QVariant variant = index.data(Qt::UserRole);
         ImageView *imageItem = variant.value<ImageView *>();
 
-        int i = index.data(Qt::UserRole + 1)sdigufsdiofsio;fj
+        int i = index.data(Qt::UserRole + 1).toInt();
 
         QStyleOptionViewItem viewOption(option);
 
