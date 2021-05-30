@@ -7,7 +7,7 @@ customSearchBar::customSearchBar()
     searchBtn->setFixedSize(16, 16);
     searchBtn->setCursor(Qt::PointingHandCursor);
     searchBtn->setToolTip("搜索");
-    searchBtn->setStyleSheet("QPushButton{ border-image: url(:/images/search-icon.svg);"
+    searchBtn->setStyleSheet("QPushButton{ border-image: url(:/images/search-icon.png);"
                                           "background:transparent;}");
     setPlaceholderText("搜索");
     hLayout->addWidget(searchBtn);

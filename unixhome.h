@@ -20,6 +20,7 @@
 
 #include "customsearchbar.h"
 #include "networkrequest.h"
+#include "albumitemdelegate.h"
 #include "itemdelegate.h"
 
 #import <Foundation/Foundation.h>
@@ -60,6 +61,7 @@ private:
 
     QList<QJsonObject> openedAlbumInfoList;
     QList<QMap<QString, int>> openedAlbumLoaded; // 打开相册图片加载索引和页数索引
+    int currentPageLoadCompleted; // 当前相册页是否加载完全
     int focusAlbumIndex;
     int hoverTabIndex;
     bool tabCloseState;
@@ -82,7 +84,7 @@ private:
     void focusAlbum(const int &); // 聚焦已打开相册
     void loadSubAlbums(const QJsonArray &); // 加载子相册
     void loadThumbnail(const QJsonObject &, const int &); // 分页加载缩略图
-    void updateListRow(const int &); // 更新图片缩略图
+    void updateListRow(const int &, const int &); // 更新图片缩略图
     void onScrollBarValueChanged(const int &); // 图片列表下拉加载
 };
 

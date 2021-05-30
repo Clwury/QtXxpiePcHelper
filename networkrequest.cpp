@@ -49,6 +49,7 @@ QJsonObject NetworkRequest::get(const QString &url, const QJsonObject &params, c
     QNetworkRequest networkRequest;
     networkRequest.setUrl(_url);
     networkReply = networkAccessManager->get(networkRequest);
+    qInfo() << networkRequest.url();
 
     // 开启事件循环,同步请求
     if (!async)

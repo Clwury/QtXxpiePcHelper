@@ -7,7 +7,7 @@
 #include <QDebug>
 #include <QCryptographicHash>
 
-#define PRODUCTION 1
+#define PRODUCTION 0
 #define USERAGENT "QTGUIAPPLICATION"
 #define PLATFORM "PC_HELPER"
 #define VERSION "4.3.5"

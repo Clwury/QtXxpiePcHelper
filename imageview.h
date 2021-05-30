@@ -17,7 +17,8 @@ public:
     enum TYPE {
         image,
         addImageBtn,
-        subAlbum
+        subAlbum,
+        albumCover
     };
 
     enum STATE {
@@ -38,7 +39,7 @@ public:
     void pixmapLoad();
 
 signals:
-    void loadCompleted(const int &);
+    void loadCompleted(const int &, const int &);
 public slots:
 
 

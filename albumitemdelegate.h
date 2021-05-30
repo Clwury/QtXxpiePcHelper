@@ -1,20 +1,19 @@
-#ifndef ITEMDELEGATE_H
-#define ITEMDELEGATE_H
+#ifndef ALBUMITEMDELEGATE_H
+#define ALBUMITEMDELEGATE_H
 
 #include <QStyledItemDelegate>
 #include <QPainter>
-#include <QPainterPath>
 #include <QFontMetrics>
 
 #include "imageview.h"
 
-class ItemDelegate : public QStyledItemDelegate
+class albumItemDelegate : public QStyledItemDelegate
 {
     Q_OBJECT
 public:
-    ItemDelegate(QObject *parent = 0);
+    albumItemDelegate(QObject *parent = 0);
     QSize sizeHint(const QStyleOptionViewItem &option, const QModelIndex &index) const;
     void paint(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const;
 };
 
-#endif // ITEMDELEGATE_H
+#endif // ALBUMITEMDELEGATE_H

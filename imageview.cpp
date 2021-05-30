@@ -39,7 +39,13 @@ ImageView::ImageView(QString url_thumbnail, QString file_name, int type, int ind
     }
     state = STATE::loading;
     style = STYLE::contain;
-    pixmap = QPixmap(":/images/img_loading.png").scaledToWidth(120, Qt::SmoothTransformation);
+    if (type == TYPE::image)
+    {
+        pixmap = QPixmap(":/images/img_loading.png").scaledToWidth(120, Qt::SmoothTransformation);
+    } else if (type == TYPE::albumCover) {
+        pixmap = QPixmap(":/images/con_pic-def-xxp.png").scaledToHeight(36, Qt::SmoothTransformation);
+    }
+
     // 设置缓存目录
     cachePath = QStandardPaths::displayName(QStandardPaths::CacheLocation);
     QDir dir;
@@ -114,10 +120,11 @@ void ImageView::pixmapLoad()
         if (p.loadFromData(bytes))
         {
             pixmap = p;
+            state = STATE::succeed;
         } else {
             pixmap = QPixmap(":/images/error.jpg").scaledToWidth(120, Qt::SmoothTransformation);
+            state = STATE::failed;
         }
-        state = STATE::succeed;
 //        // 写入缓存
 //        QString thumbnailMd5 = md5(urlThumbnail);
 //        qDebug() << "缓存文件名" << thumbnailMd5;
@@ -147,7 +154,7 @@ void ImageView::pixmapLoad()
         pixmap = QPixmap(":/images/error.jpg").scaledToWidth(120, Qt::SmoothTransformation);
         qDebug() << "图片加载失败";
     }
-    emit loadCompleted(index);
+    emit loadCompleted(index, state);
     reply->deleteLater();
     networkManager->deleteLater();
 }

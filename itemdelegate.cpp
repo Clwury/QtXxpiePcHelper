@@ -1,6 +1,6 @@
 #include "itemdelegate.h"
 
-ItemDelegate::ItemDelegate()
+ItemDelegate::ItemDelegate(QObject *parent) : QStyledItemDelegate(parent)
 {
 
 }
@@ -8,6 +8,8 @@ ItemDelegate::ItemDelegate()
 QSize ItemDelegate::sizeHint(const QStyleOptionViewItem &option, const QModelIndex &index) const
 {
 //    qDebug() << "item resize";
+    Q_UNUSED(option);
+    Q_UNUSED(index);
     return QSize(140, 160);
 }
 
@@ -20,7 +22,7 @@ void ItemDelegate::paint(QPainter *painter, const QStyleOptionViewItem &option, 
         QVariant variant = index.data(Qt::UserRole);
         ImageView *imageItem = variant.value<ImageView *>();
 
-        int i = index.data(Qt::UserRole + 1)sdigufsdiofsio;fj
+        ImageView::STATE state = ImageView::STATE(index.data(Qt::UserRole + 1).toInt());
 
         QStyleOptionViewItem viewOption(option);
 
@@ -62,10 +64,28 @@ void ItemDelegate::paint(QPainter *painter, const QStyleOptionViewItem &option, 
         QRect thumbnailRect = QRect(rect.left() + 10, rect.top() + 10, 120, 120);
         QRect fileNameRect = QRect(rect.left(), thumbnailRect.bottom() + 10, rect.width(), 20);
 //        qDebug() << "获取缩略图信息" << index.row() << imageItem->getFileName() << imageItem->getSucceedPixmap();
-        if (imageItem->getState() == ImageView::STATE::loading)
+//        if (imageItem->getState() == ImageView::STATE::loading)
+//        {
+//            painter->drawPixmap(rect.left() + 10, rect.top() + 10, 120, 120, imageItem->getPixmap());
+//        } else if (imageItem->getState() == ImageView::STATE::succeed) {
+//            if (imageItem->getType() == ImageView::TYPE::image)
+//            {
+//                painter->drawPixmap(rect.left() + 10, rect.top() + 10, 120, 120, imageItem->getPixmap());
+//            } else if (imageItem->getType() == ImageView::TYPE::addImageBtn) {
+//                painter->drawPixmap(rect.left() + 40, rect.top() + 40, 60, 60, imageItem->getPixmap());
+//            } else if (imageItem->getType() == ImageView::TYPE::subAlbum) {
+//                painter->drawPixmap(rect.left() + 30, rect.top() + 38, 80, 64, imageItem->getPixmap());
+//            }
+
+//        } else if (imageItem->getState() == ImageView::STATE::failed) {
+//            painter->drawPixmap(rect.left() + 10, rect.top() + 25, 120, 90, imageItem->getPixmap());
+//        }
+
+        // 根据图片不同加载完成状态
+        if (state == ImageView::STATE::loading)
         {
             painter->drawPixmap(rect.left() + 10, rect.top() + 10, 120, 120, imageItem->getPixmap());
-        } else if (imageItem->getState() == ImageView::STATE::succeed) {
+        } else if (state == ImageView::STATE::succeed) {
             if (imageItem->getType() == ImageView::TYPE::image)
             {
                 painter->drawPixmap(rect.left() + 10, rect.top() + 10, 120, 120, imageItem->getPixmap());
@@ -74,14 +94,13 @@ void ItemDelegate::paint(QPainter *painter, const QStyleOptionViewItem &option, 
             } else if (imageItem->getType() == ImageView::TYPE::subAlbum) {
                 painter->drawPixmap(rect.left() + 30, rect.top() + 38, 80, 64, imageItem->getPixmap());
             }
-
-        } else if (imageItem->getState() == ImageView::STATE::failed) {
+        } else if (state == ImageView::STATE::failed) {
             painter->drawPixmap(rect.left() + 10, rect.top() + 25, 120, 90, imageItem->getPixmap());
         }
 
         painter->setPen(QPen(QColor("#000000")));
-        painter->setFont(QFont("Times", 12));
-        QFontMetrics fontMetrics(QFont("Times", 12));
+        painter->setFont(QFont("Hiragino Sans GB", 12));
+        QFontMetrics fontMetrics(QFont("Hiragino Sans GB", 12));
         QString fileNameText = fontMetrics.elidedText(imageItem->getFileName(), Qt::ElideRight, rect.width());
         painter->drawText(fileNameRect, Qt::AlignCenter, fileNameText);
 

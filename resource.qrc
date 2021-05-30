@@ -3,15 +3,17 @@
         <file>images/close.svg</file>
         <file>images/hover-close.svg</file>
         <file>images/ic_login_logo--imgs.png</file>
-        <file>images/search-icon.svg</file>
-        <file>images/add.svg</file>
-        <file>images/album.svg</file>
-        <file>images/transport.svg</file>
         <file>images/tab_close.png</file>
         <file>images/error.jpg</file>
         <file>images/folder.png</file>
         <file>images/add_image.png</file>
         <file>images/img_loading.png</file>
+        <file>images/add.png</file>
+        <file>images/album.png</file>
+        <file>images/transport.png</file>
+        <file>images/search-icon.png</file>
+        <file>images/xxpie_default_photo.png</file>
+        <file>images/con_pic-def-xxp.png</file>
     </qresource>
     <qresource prefix="/qss">
         <file>qss/login.qss</file>

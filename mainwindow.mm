@@ -49,13 +49,15 @@ void MainWindow::initUI()
 //    m_label->setFixedHeight(scaleImage.height());
     m_userName = new QLineEdit;
     m_userName->setPlaceholderText("请输入号码");
-    m_userName->setText("18390216081");
+    m_userName->setText("1839021608102");
 //    m_userName->setMaximumWidth(150);
     m_userName->setFixedWidth(150);
 
     m_passWord = new QLineEdit;
+#if PRODUCTION
     m_passWord->setEchoMode(QLineEdit::Password);
     m_passWord->setText("123456");
+#endif
 //    m_passWord->setMaximumWidth(150);
     m_passWord->setFixedWidth(150);
     m_login = new QPushButton("登录");
@@ -124,14 +126,37 @@ void MainWindow::accountLogin()
     {
         qDebug() << "after take" << response;
         QString md5(const QString &str);
-        QJsonObject params
-        {
-            {"username", userName},
-            {"platform", PLATFORM},
-            {"machine_id", MACHINE_ID},
-            {"password", md5(password)}
-        };
-        response = m_request->post("/photographer/mine/signInByPassword", params, false);
+
+
+        #if PRODUCTION
+            QJsonObject params
+            {
+                {"username", userName},
+                {"platform", PLATFORM},
+                {"machine_id", MACHINE_ID},
+                {"password", md5(password)}
+            };
+            response = m_request->post("/photographer/mine/signInByPassword", params, false);
+        #else
+            // 测试环境自动获取验证码
+            QJsonObject params
+            {
+                {"mobile", userName},
+                {"code", "5ae18417cc1ab7321441cc49"}
+            };
+            response = m_request->post("/photographer/mine/generateSignInCode", params, false);
+            qInfo() << "验证码登录" << QString::number(response.value("signInCode").toDouble());
+            m_passWord->setText(QString::number(response.value("signInCode").toDouble()));
+            password = m_passWord->text();
+            params = QJsonObject {
+                {"username", userName},
+                {"platform", PLATFORM},
+                {"machine_id", MACHINE_ID},
+                {"verification_code", password},
+                {"district", "+86"}
+            };
+            response = m_request->post("/sm/signIn", params, false);
+        #endif
 
         // 登录成功
         if (response.contains("token"))
