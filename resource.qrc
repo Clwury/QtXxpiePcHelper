@@ -14,6 +14,7 @@
         <file>images/search-icon.png</file>
         <file>images/xxpie_default_photo.png</file>
         <file>images/con_pic-def-xxp.png</file>
+        <file>images/mask.png</file>
     </qresource>
     <qresource prefix="/qss">
         <file>qss/login.qss</file>

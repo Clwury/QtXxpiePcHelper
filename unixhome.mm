@@ -323,7 +323,7 @@ void unixhome::initAlbumList(const QJsonObject &albumList)
     albumListView->setModel(albumListModel);
     albumListView->setResizeMode(QListView::Adjust);
     albumListView->setViewMode(QListView::ListMode);
-    albumListView->setSpacing(5);
+    albumListView->setSpacing(0);
     albumListView->setSelectionRectVisible(true);
     albumListView->setSelectionMode(QAbstractItemView::ExtendedSelection);
     albumListView->setStyleSheet("QScrollBar:vertical\
@@ -357,13 +357,13 @@ void unixhome::initAlbumList(const QJsonObject &albumList)
     connect(albumListView, &QListView::clicked, this, &unixhome::openAlbum);
 
     QVBoxLayout *albumListLayout = new QVBoxLayout;
-    albumListLayout->setContentsMargins(0, 20, 2, 0);
+    albumListLayout->setContentsMargins(0, 0, 2, 0);
     albumListLayout->addWidget(albumListView);
 
     QWidget *albumListWidget = new QWidget;
     albumListWidget->setLayout(albumListLayout);
     albumListWidget->setObjectName("albumListWidget");
-    albumListWidget->setFixedWidth(260);
+    albumListWidget->setFixedWidth(270);
 //    albumListWidget->setStyleSheet("border:1px solid green;");
     albumListWidget->setStyleSheet("#albumListWidget{border-right:1px solid #eaeaea;}");
     MainContentLayout->addWidget(albumListWidget);
@@ -379,7 +379,14 @@ void unixhome::initAlbumList(const QJsonObject &albumList)
             const QJsonObject albumObject = albums[i].toObject();
     //        qDebug() << "相册名: " << albumObject["task_name"];
             qInfo() << "share_photo_url:" << albumObject.value("share_photo_url");
-            albumsView[i] = new ImageView(albumObject.value("share_photo_url").toString(), albumObject.value("task_name").toString(), ImageView::TYPE::albumCover, -1);
+            albumsView[i] = new ImageView(albumObject.value("share_photo_url").toString(), albumObject.value("task_name").toString(), ImageView::TYPE::albumCover, i);
+            if (!albumObject.value("share_photo_url").toString().isEmpty())
+            {
+                connect(albumsView[i], &ImageView::loadCompleted, [this](const int &index, const int &state){
+                    QModelIndex i = albumListModel->index(index, 0, QModelIndex());
+                    albumListModel->setData(i, ImageView::STATE(state), Qt::UserRole + 1);
+                });
+            }
             QStandardItem *albumItem = new QStandardItem;
     //        albumItem->setSizeHint(QSize(0, 20));
     //        albumItem->setText(albumObject["task_name"].toString());

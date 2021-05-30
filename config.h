@@ -14,11 +14,11 @@
 #define TIMEOUT 30000
 
 #if PRODUCTION
-    #define BASE "https://int.xxpie.com/api"
-    #define BASEDOMAIN "https://www.xxpie.com"
+#define BASE "https://int.xxpie.com/api"
+#define BASEDOMAIN "https://www.xxpie.com"
 #else
-    #define BASE "https://int2.xxpie.com/api"
-    #define BASEDOMAIN "https://www-test.xxpie.com"
+#define BASE "https://int2.xxpie.com/api"
+#define BASEDOMAIN "https://www-test.xxpie.com"
 #endif
 
 extern const QUuid UID;

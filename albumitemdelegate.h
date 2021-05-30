@@ -3,7 +3,10 @@
 
 #include <QStyledItemDelegate>
 #include <QPainter>
+#include <QPainterPath>
+#include <QBitmap>
 #include <QFontMetrics>
+#include <QDateTime>
 
 #include "imageview.h"
 
