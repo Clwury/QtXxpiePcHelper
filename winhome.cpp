@@ -1,6 +1,6 @@
-#include "unixhome.h"
+#include "winhome.h"
 
-unixhome::unixhome(QWidget *parent) : QMainWindow(parent)
+winhome::winhome(QWidget *parent) : QMainWindow(parent)
 {
     initUI();
     initSignalSlots();
@@ -37,7 +37,7 @@ unixhome::unixhome(QWidget *parent) : QMainWindow(parent)
     albumBottomTabWidget->setLayout(albumBottomTabHLayout);
 }
 
-bool unixhome::eventFilter(QObject *object, QEvent *event)
+bool winhome::eventFilter(QObject *object, QEvent *event)
 {
     if (event->type() == QEvent::MouseButtonPress && object->objectName() == "albumTabBar")
     {
@@ -127,7 +127,7 @@ bool unixhome::eventFilter(QObject *object, QEvent *event)
     return QWidget::eventFilter(object, event);
 }
 
-void unixhome::initUI()
+void winhome::initUI()
 {
     resize(1200, 800);
     setStyleSheet("background-color: #eeefee;");
@@ -143,9 +143,10 @@ void unixhome::initUI()
     window.titlebarAppearsTransparent = YES;
 
     window.styleMask = NSWindowStyleMaskClosable | NSWindowStyleMaskMiniaturizable
-                       | NSWindowStyleMaskResizable | NSWindowStyleMaskTitled
-                       | NSWindowStyleMaskFullSizeContentView;
+            | NSWindowStyleMaskResizable | NSWindowStyleMaskTitled
+            | NSWindowStyleMaskFullSizeContentView;
 #endif
+
 
 //    NSTitlebarAccessoryViewController *vc = [[NSTitlebarAccessoryViewController alloc] init];
 //    vc.view = [[NSView alloc] initWithFrame:((NSView *)window.contentView).frame];
@@ -222,7 +223,7 @@ void unixhome::initUI()
 
     // 协同添加
     QImage add_icon;
-    add_icon.load(":/images/add.png");
+    add_icon.load(":/images/add.svg");
     QLabel *add_icon_label = new QLabel;
     add_icon_label->setPixmap(QPixmap::fromImage(add_icon).scaledToHeight(20, Qt::SmoothTransformation));
     add_icon_label->setAlignment(Qt::AlignHCenter);
@@ -235,7 +236,7 @@ void unixhome::initUI()
 
     // 相册
     QImage album_icon;
-    album_icon.load(":/images/album.png");
+    album_icon.load(":/images/album.svg");
     QLabel *album_icon_label = new QLabel;
     album_icon_label->setPixmap(QPixmap::fromImage(album_icon).scaledToHeight(20, Qt::SmoothTransformation));
     album_icon_label->setAlignment(Qt::AlignHCenter);
@@ -248,7 +249,7 @@ void unixhome::initUI()
 
     // 传输列表
     QImage transport_icon;
-    transport_icon.load(":/images/transport.png");
+    transport_icon.load(":/images/transport.svg");
     QLabel *transport_icon_label = new QLabel;
     transport_icon_label->setPixmap(QPixmap::fromImage(transport_icon).scaledToHeight(20, Qt::SmoothTransformation));
     transport_icon_label->setAlignment(Qt::AlignHCenter);
@@ -260,12 +261,12 @@ void unixhome::initUI()
     side_bar_vLayout->addSpacing(25);
 }
 
-void unixhome::initSignalSlots()
+void winhome::initSignalSlots()
 {
 
 }
 
-void unixhome::initData()
+void winhome::initData()
 {
     m_request = new NetworkRequest();
     // 获取相册列表
@@ -276,7 +277,7 @@ void unixhome::initData()
         {"page_no", 1}
     };
     QJsonObject albums = m_request->get("/pm/queryAlbumsPg", params, false);
-    qInfo() << albums;
+//    qDebug() << albums;
 
     // 获取用户信息
     params = QJsonObject{};
@@ -312,18 +313,13 @@ void unixhome::initData()
     initAlbumList(albums);
 }
 
-void unixhome::initAlbumList(const QJsonObject &albumList)
+void winhome::initAlbumList(const QJsonObject &albumList)
 {
     albumListView = new QListView;
     albumListModel = new QStandardItemModel;
-    albumItemDelegate *albumDelegate = new albumItemDelegate(this);
-    albumListView->setVerticalScrollBarPolicy(Qt::ScrollBarAsNeeded);
+//    albumListView->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
     albumListView->setFrameShape(QFrame::NoFrame);
-    albumListView->setItemDelegate(albumDelegate);
     albumListView->setModel(albumListModel);
-    albumListView->setResizeMode(QListView::Adjust);
-    albumListView->setViewMode(QListView::ListMode);
-    albumListView->setSpacing(5);
     albumListView->setSelectionRectVisible(true);
     albumListView->setSelectionMode(QAbstractItemView::ExtendedSelection);
     albumListView->setStyleSheet("QScrollBar:vertical\
@@ -354,7 +350,7 @@ void unixhome::initAlbumList(const QJsonObject &albumList)
         subcontrol-position:top;\
     }");
     albumListView->setEditTriggers(QAbstractItemView::NoEditTriggers);
-    connect(albumListView, &QListView::clicked, this, &unixhome::openAlbum);
+    connect(albumListView, &QListView::doubleClicked, this, &winhome::openAlbum);
 
     QVBoxLayout *albumListLayout = new QVBoxLayout;
     albumListLayout->setContentsMargins(0, 20, 2, 0);
@@ -363,7 +359,7 @@ void unixhome::initAlbumList(const QJsonObject &albumList)
     QWidget *albumListWidget = new QWidget;
     albumListWidget->setLayout(albumListLayout);
     albumListWidget->setObjectName("albumListWidget");
-    albumListWidget->setFixedWidth(260);
+    albumListWidget->setFixedWidth(250);
 //    albumListWidget->setStyleSheet("border:1px solid green;");
     albumListWidget->setStyleSheet("#albumListWidget{border-right:1px solid #eaeaea;}");
     MainContentLayout->addWidget(albumListWidget);
@@ -371,33 +367,24 @@ void unixhome::initAlbumList(const QJsonObject &albumList)
 //    qDebug() << "相册列表: " << albumList.value("albums");
 //    qDebug() << "相册数量: " << albumList["count"];
     QJsonArray albums = albumList.value("albums").toArray();
-    if (albums.size() > 0)
+    for (auto album : albums)
     {
-        ImageView *albumsView[albums.size()];
-        for (int i = 0; i < albums.size(); i++)
-        {
-            const QJsonObject albumObject = albums[i].toObject();
-    //        qDebug() << "相册名: " << albumObject["task_name"];
-            qInfo() << "share_photo_url:" << albumObject.value("share_photo_url");
-            albumsView[i] = new ImageView(albumObject.value("share_photo_url").toString(), albumObject.value("task_name").toString(), ImageView::TYPE::albumCover, -1);
-            QStandardItem *albumItem = new QStandardItem;
-    //        albumItem->setSizeHint(QSize(0, 20));
-    //        albumItem->setText(albumObject["task_name"].toString());
-    //        albumItem->setData(albumObject, Qt::UserRole);
-            albumItem->setData(QVariant::fromValue(albumsView[i]), Qt::UserRole);
-            albumItem->setData(ImageView::STATE::loading, Qt::UserRole + 1);
-            albumItem->setData(albumObject, Qt::UserRole + 2);
-            albumListModel->appendRow(albumItem);
-        }
+        const QJsonObject albumObject = album.toObject();
+//        qDebug() << "相册名: " << albumObject["task_name"];
+        QStandardItem *albumItem = new QStandardItem;
+        albumItem->setSizeHint(QSize(0, 20));
+        albumItem->setText(albumObject["task_name"].toString());
+        albumItem->setData(albumObject, Qt::UserRole);
+        albumListModel->appendRow(albumItem);
     }
 }
 
-void unixhome::openAlbum(const QModelIndex &modelIndex)
+void winhome::openAlbum(const QModelIndex &modelIndex)
 {
     try {
 
-        qDebug() << "进入相册" << modelIndex.data(Qt::UserRole + 2).toJsonObject()["shoot_task_id"] << modelIndex.data(Qt::UserRole).toJsonObject()["task_name"];
-        QJsonObject albumInfo = modelIndex.data(Qt::UserRole + 2).toJsonObject();
+        qDebug() << "进入相册" << modelIndex.data(Qt::UserRole).toJsonObject()["shoot_task_id"] << modelIndex.data(Qt::UserRole).toJsonObject()["task_name"];
+        QJsonObject albumInfo = modelIndex.data(Qt::UserRole).toJsonObject();
         QString albumId = albumInfo["shoot_task_id"].toString();
         QString albumName = albumInfo["task_name"].toString();
 
@@ -471,6 +458,7 @@ void unixhome::openAlbum(const QModelIndex &modelIndex)
             }
 
             imageListLayout->addWidget(imageListView);
+    //        openedAlbumCount++;
         }
 
         albumBottomTabWidget->findChild<QLabel *>("currentAlbumImgCountLabel")->setText(QString::number(focusAlbumInfo.value("count").toInt()) + " 张图片");
@@ -483,7 +471,7 @@ void unixhome::openAlbum(const QModelIndex &modelIndex)
     }
 }
 
-void unixhome::addAlbumTabBar(const QString &albumName, const bool &isFocus)
+void winhome::addAlbumTabBar(const QString &albumName, const bool &isFocus)
 {
     QWidget *albumTabBar = new QWidget;
     albumTabBar->setObjectName("albumTabBar");
@@ -556,7 +544,7 @@ void unixhome::addAlbumTabBar(const QString &albumName, const bool &isFocus)
 //    imageListLayout->addWidget(albumTabWidget); // 添加相册Tab栏ddfdsfdsfdsfsdf
 }
 
-QListView * unixhome::initAlbumImageList(const QString &albumId, const QString &albumName)
+QListView * winhome::initAlbumImageList(const QString &albumId, const QString &albumName)
 {
     // 获取子相册信息
     QJsonObject params
@@ -571,7 +559,7 @@ QListView * unixhome::initAlbumImageList(const QString &albumId, const QString &
 
     QListView *imageListView = new QListView;
     QStandardItemModel *imageModel = new QStandardItemModel;
-    ItemDelegate *imageDelegate = new ItemDelegate(this);
+    ItemDelegate *imageDelegate = new ItemDelegate;
     imageListView->setFrameShape(QFrame::NoFrame);
     imageListView->setItemDelegate(imageDelegate);
     imageListView->setSpacing(15);
@@ -642,10 +630,9 @@ QListView * unixhome::initAlbumImageList(const QString &albumId, const QString &
         openedAlbumLoaded.append(map);
         focusAlbumIndex = openedAlbumInfoList.size() - 1;
 
-        ImageView *addImage = new ImageView("", "点击或拖拽上传", ImageView::TYPE::addImageBtn, -1);
+        ImageView *addImage = new ImageView("", "点击或拖拽上传", 1, -1);
         QStandardItem *addImageModelItem = new QStandardItem;
         addImageModelItem->setData(QVariant::fromValue(addImage), Qt::UserRole);
-        addImageModelItem->setData(ImageView::STATE::succeed, Qt::UserRole + 1);
         static_cast<QStandardItemModel *>(focusAlbumImageListView->model())->appendRow(addImageModelItem);
         // 加载子相册
         loadSubAlbums(subAlbumsArr);
@@ -656,13 +643,13 @@ QListView * unixhome::initAlbumImageList(const QString &albumId, const QString &
 
         // 下拉滚动加载
         QScrollBar *imageVerticalScrollBar = imageListView->verticalScrollBar();
-        connect(imageVerticalScrollBar, &QScrollBar::valueChanged, this, &unixhome::onScrollBarValueChanged);
+        connect(imageVerticalScrollBar, &QScrollBar::valueChanged, this, &winhome::onScrollBarValueChanged);
     }
 
     return imageListView;
 }
 
-void unixhome::focusAlbum(const int &index)
+void winhome::focusAlbum(const int &index)
 {
     // 相册tab栏切换
     foreach (QWidget *w, albumTabList) {
@@ -690,23 +677,22 @@ void unixhome::focusAlbum(const int &index)
     qInfo() << "focus album success" << index;
 }
 
-void unixhome::loadSubAlbums(const QJsonArray &subAlbums)
+void winhome::loadSubAlbums(const QJsonArray &subAlbums)
 {
     if (subAlbums.size() > 0)
     {
         ImageView *subAlbumsView[subAlbums.size()];
         for (int i = 0; i < subAlbums.size(); i++) {
             QJsonObject subAlbumItem = subAlbums[i].toObject();
-            subAlbumsView[i] = new ImageView("", subAlbumItem.value("task_sub_name").toString(), ImageView::TYPE::subAlbum, -1);
+            subAlbumsView[i] = new ImageView("", subAlbumItem.value("task_sub_name").toString(), 2, -1);
             QStandardItem *subAlbumModelItem = new QStandardItem;
             subAlbumModelItem->setData(QVariant::fromValue(subAlbumsView[i]), Qt::UserRole);
-            subAlbumModelItem->setData(ImageView::STATE::succeed, Qt::UserRole + 1);
             static_cast<QStandardItemModel *>(focusAlbumImageListView->model())->appendRow(subAlbumModelItem);
         }
     }
 }
 
-void unixhome::loadThumbnail(const QJsonObject &albumImages, const int &pageNo)
+void winhome::loadThumbnail(const QJsonObject &albumImages, const int &pageNo)
 {
     Q_UNUSED(pageNo);
     int count = albumImages["items"].toArray().size();
@@ -716,8 +702,8 @@ void unixhome::loadThumbnail(const QJsonObject &albumImages, const int &pageNo)
     {
         QJsonObject imageItem = image.toObject();
 //        qDebug() << "图片名: " << imageItem.value("file_name");
-        images[i] = new ImageView(imageItem["url_thumbnail"].toString(), imageItem ["file_name"].toString(), ImageView::TYPE::image, ++openedAlbumLoaded[focusAlbumIndex]["loaded_index"]);
-        connect(images[i], &ImageView::loadCompleted, this, &unixhome::updateListRow);
+        images[i] = new ImageView(imageItem["url_thumbnail"].toString(), imageItem ["file_name"].toString(), 0, openedAlbumLoaded[focusAlbumIndex]["loaded_index"]++);
+        connect(images[i], &ImageView::loadCompleted, this, &winhome::updateListRow);
         QStandardItem *imageModelItem = new QStandardItem;
 //        qDebug() << "picture info" << images[i]->getFileName();
         imageModelItem->setData(QVariant::fromValue(images[i]), Qt::UserRole);
@@ -728,17 +714,17 @@ void unixhome::loadThumbnail(const QJsonObject &albumImages, const int &pageNo)
     }
 }
 
-void unixhome::updateListRow(const int &index, const int &state)
+void winhome::updateListRow(const int &index)
 {
-    QModelIndex i = focusAlbumImageListView->model()->index(index, 0, QModelIndex());
+    QModelIndex i = albumListModel->index(index, 0, QModelIndex());
 //    QVariant variant = i.data(Qt::UserRole);
 //    ImageView *item = variant.value<ImageView *>();
 //    albumListModel->setData(i, item->getPixmap(), Qt::UserRole + 1);
-    focusAlbumImageListView->model()->setData(i, ImageView::STATE(state), Qt::UserRole + 1);
-    qInfo() << index << ImageView::STATE(state);
+    albumListModel->setData(i, ImageView::STATE::succeed, Qt::UserRole + 1);
+    qInfo() << index;
 }
 
-void unixhome::onScrollBarValueChanged(const int &value)
+void winhome::onScrollBarValueChanged(const int &value)
 {
 //    qDebug() << "scrollBar maxValue" << focusAlbumImageListView->verticalScrollBar()->maximum();
 //    qDebug() << value;
@@ -749,23 +735,12 @@ void unixhome::onScrollBarValueChanged(const int &value)
     {
         return;
     } else if (value == focusAlbumImageListView->verticalScrollBar()->maximum()) {
-        // 判断上一页是否加载完成
-        for (int i = 50 * (openedAlbumLoaded[focusAlbumIndex]["page_no"] - 1); i < 50 * openedAlbumLoaded[focusAlbumIndex]["page_no"]; i++)
-        {
-            QModelIndex index = focusAlbumImageListView->model()->index(i, 0, QModelIndex());
-            qInfo() << "panduanjiazai" << index.row() << index.data(Qt::UserRole + 1).toInt();
-            if (index.data(Qt::UserRole + 1).toInt() == 0)
-            {
-                break;
-                return;
-            }
-        }
         // 分页加载
         QJsonObject params
         {
             {"album_id", focusAlbumInfo["album_id"].toString()},
 //            {"page_no", focusAlbumInfo["page_no"].toInt() + 1},
-            {"page_no", openedAlbumLoaded[focusAlbumIndex]["page_no"] + 1},
+            {"page_no", openedAlbumLoaded[focusAlbumIndex]["page_no"]++},
             {"page_size", 50},
             {"item_retouch_status", "ALL"},
             {"sub_album_ids", "[]"},
