@@ -94,16 +94,17 @@ void albumItemDelegate::paint(QPainter *painter, const QStyleOptionViewItem &opt
 
         painter->setRenderHints(QPainter::Antialiasing | QPainter::SmoothPixmapTransform); // 抗锯齿和平滑处理
         // 图片裁切圆角
-        QPainterPath roundPath;
-        roundPath.addRoundedRect(albumCoverRect, 3, 3);
+        QPainterPath cliPath;
+//        roundPath.addRoundedRect(albumCoverRect, 3, 3);
+        cliPath.addRect(albumCoverRect);
 //        painter->setClipPath(roundPath);
 //        painter->drawPixmap(rect.x() + 12, rect.y() + 15, 36, 36, newPixmap);
 
         QBrush brush = QBrush(newPixmap);
         painter->setBrush(brush);
         painter->setBrushOrigin(rect.x() + 12, rect.y() + 15);
-        QPolygon p = roundPath.toFillPolygon().toPolygon();
-        painter->drawRoundedRect(p.boundingRect(), 3, 3);
+        QPolygon polygon = cliPath.toFillPolygon().toPolygon();
+        painter->drawRoundedRect(polygon.boundingRect(), 3, 3);
 
 
         painter->setPen(QColor("#000000"));
